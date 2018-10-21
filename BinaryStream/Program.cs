@@ -1,12 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BinaryStream {
     class Program {
         static void Main(string[] args) {
+            BinaryWriter writer = new BinaryWriter();
+            writer.Write(300);
+            writer.Write(1900);
+            writer.Write(0);
+            writer.Write(0);
+            writer.Write(12);
         }
     }
 }
