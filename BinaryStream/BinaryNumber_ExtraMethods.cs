@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Globalization;
 
-namespace BinaryStream {
+namespace SickDev.BinaryCompressor {
     partial class BinaryNumber: IConvertible, IComparable<BinaryNumber>, IEquatable<BinaryNumber> {
         static IFormatProvider provider = CultureInfo.CurrentCulture.NumberFormat;
+
         #region GetTypeCode
         public TypeCode GetTypeCode() {
             return value.GetTypeCode();
@@ -75,7 +76,6 @@ namespace BinaryStream {
         #endregion
 
         #region CustomGetTypeCode
-
         public bool ToBoolean() {
             return ((IConvertible)value).ToBoolean(provider);
         }
@@ -137,12 +137,54 @@ namespace BinaryStream {
         }
         #endregion
 
+        #region Operators
+        public static BinaryNumber operator <<(BinaryNumber binary, int bits) {
+            return new BinaryNumber(binary.value << bits);
+        }
+
+        public static BinaryNumber operator >>(BinaryNumber binary, int bits) {
+            return new BinaryNumber(binary.value >> bits);
+        }
+
+        public static BinaryNumber operator |(BinaryNumber binary, IConvertible number) {
+            return new BinaryNumber(binary.value | number.ToInt64(null));
+        }
+
+        public static BinaryNumber operator &(BinaryNumber binary, IConvertible number) {
+            return new BinaryNumber(binary.value & number.ToInt64(null));
+        }
+
+        public static BinaryNumber operator ^(BinaryNumber binary, IConvertible number) {
+            return new BinaryNumber(binary.value ^ number.ToInt64(null));
+        }
+
+        public static bool operator ==(BinaryNumber binary, IConvertible number) {
+            return binary.value == number.ToInt64(null);
+        }
+
+        public static bool operator !=(BinaryNumber binary, IConvertible number) {
+            return binary.value != number.ToInt64(null);
+        }
+
+        public static BinaryNumber operator ~(BinaryNumber binary) {
+            return new BinaryNumber(~binary.value);
+        }
+        #endregion
+
         public int CompareTo(BinaryNumber other) {
             return value.CompareTo(other.value);
         }
 
         public bool Equals(BinaryNumber other) {
             return value.Equals(other.value);
+        }
+
+        public override bool Equals(object obj) {
+            return value.Equals(obj);
+        }
+
+        public override int GetHashCode() {
+            return value.GetHashCode();
         }
     }
 }
