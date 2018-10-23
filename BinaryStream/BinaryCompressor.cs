@@ -1,8 +1,9 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Collections.Generic;
 
 namespace SickDev.BinaryCompressor {
-    class BinaryWriter {
+    class BinaryCompressor {
 
         List<BinaryNumber> numbers;
         long maxNumber;
@@ -16,8 +17,8 @@ namespace SickDev.BinaryCompressor {
             set { numbers[numbers.Count - 1] = value; }
         }
 
-        public BinaryWriter():this(int.MaxValue) {}
-        public BinaryWriter(long maxNumber) {
+        public BinaryCompressor():this(int.MaxValue) {}
+        public BinaryCompressor(long maxNumber) {
             this.maxNumber = maxNumber;
             maxSignificantBits = new BinaryNumber((new BinaryNumber(maxNumber)).significantBits).significantBits;
             numbers = new List<BinaryNumber>();
@@ -33,6 +34,8 @@ namespace SickDev.BinaryCompressor {
                 throw new System.Exception(string.Format("The input value {0} is greater than the max allowed value {1}", value, maxNumber));
 
             BinaryNumber number = new BinaryNumber(value);
+            number.ToString();
+            number.GetBytes();
             while (number.significantBits > freeBits) {
                 int leftOverBits = number.significantBits - freeBits;
                 BinaryNumber mask = new BinaryNumber(1);
@@ -65,7 +68,7 @@ namespace SickDev.BinaryCompressor {
                     CreateNewNumber();
             }
 
-            WriteToCurrentNumber(new BinaryNumber(number.significantBits), maxSignificantBits);
+            //WriteToCurrentNumber(new BinaryNumber(number.significantBits), maxSignificantBits);
             WriteToCurrentNumber(number, number.significantBits);
         }
 
@@ -93,8 +96,15 @@ namespace SickDev.BinaryCompressor {
             Write(value, sizeof(long));
         }
 
-        public long[] GetAllAsLongs() {
-            return numbers.Select(x => x.value).ToArray();
+        public byte[] GetBytes() {
+            byte[][] bytesPerNumber = new byte[numbers.Count][];
+            for (int i = 0; i < bytesPerNumber.Length; i++)
+                bytesPerNumber[i] = numbers[i].GetBytes();
+
+            byte[] result = new byte[bytesPerNumber.Sum(x => x.Length)];
+            for (int i = 0; i < bytesPerNumber.Length; i++)
+                Array.Copy(bytesPerNumber[i], 0, result, i * BinaryNumber.maxBits / BinaryNumber.bitsPerByte, bytesPerNumber[i].Length);
+            return result;
         }
     }
 }

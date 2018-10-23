@@ -44,7 +44,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BinaryNumber_ExtraMethods.cs" />
-    <Compile Include="BinaryWriter.cs" />
+    <Compile Include="BinaryCompressor.cs" />
     <Compile Include="BinaryNumber.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
