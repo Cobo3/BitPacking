@@ -6,7 +6,7 @@ namespace SickDev.BinaryCompressor {
     class BinaryCompressor {
 
         List<BinaryNumber> numbers;
-        long maxNumber;
+        ulong maxNumber;
         int maxSignificantBits;
         int bitsUsed;
 
@@ -17,8 +17,8 @@ namespace SickDev.BinaryCompressor {
             set { numbers[numbers.Count - 1] = value; }
         }
 
-        public BinaryCompressor():this(int.MaxValue) {}
-        public BinaryCompressor(long maxNumber) {
+        public BinaryCompressor():this(uint.MaxValue) {}
+        public BinaryCompressor(ulong maxNumber) {
             this.maxNumber = maxNumber;
             maxSignificantBits = new BinaryNumber((new BinaryNumber(maxNumber)).significantBits).significantBits;
             numbers = new List<BinaryNumber>();
@@ -29,71 +29,72 @@ namespace SickDev.BinaryCompressor {
             numbers.Add(new BinaryNumber(0));
         }
 
-        void Write(long value, int maxSize) {
+        void WriteValue(ulong value) {
             if (value > maxNumber)
-                throw new System.Exception(string.Format("The input value {0} is greater than the max allowed value {1}", value, maxNumber));
+                throw new Exception(string.Format("The input value {0} is greater than the max allowed value {1}", value, maxNumber));
 
             BinaryNumber number = new BinaryNumber(value);
-            number.ToString();
-            number.GetBytes();
-            while (number.significantBits > freeBits) {
-                int leftOverBits = number.significantBits - freeBits;
-                BinaryNumber mask = new BinaryNumber(1);
+            PreProcessWrite(new BinaryNumber(number.significantBits), maxSignificantBits);
+            PreProcessWrite(number);
+        }
+
+        void PreProcessWrite(BinaryNumber number) {
+            PreProcessWrite(number, number.significantBits);
+        }
+
+        void PreProcessWrite(BinaryNumber number, int significantBits) {
+            while (significantBits > freeBits) {
+                int leftOverBits = significantBits - freeBits;
+                ulong mask = 1;
                 for (int i = 0; i < leftOverBits - 1; i++) {
                     mask <<= 1;
                     mask |= 1;
                 }
-                BinaryNumber leftOvers = number & mask;
+                ulong leftOvers = number.value & mask;
                 number ^= leftOvers;
                 number >>= leftOverBits;
 
-                Write(number);
-                number = leftOvers;
-
-                //If leftovers are a bunch of 0s, we still have to make sure those are written
-                if (number == 0) {
-                    for (int i = 0; i < leftOverBits - 1; i++)
-                        Write(leftOvers);
-                }
+                WriteToCurrentNumber(number, number.significantBits);
+                number = new BinaryNumber(leftOvers);
+                significantBits = leftOverBits;
             }
-            Write(number);
+            WriteToCurrentNumber(number, significantBits);
         }
 
-        void Write(BinaryNumber number) {
-            void WriteToCurrentNumber(BinaryNumber _number, int significantBits) {
-                currentNumber <<= significantBits;
-                currentNumber |= _number.value;
-                bitsUsed += significantBits;
-                if (freeBits == 0)
-                    CreateNewNumber();
-            }
-
-            //WriteToCurrentNumber(new BinaryNumber(number.significantBits), maxSignificantBits);
-            WriteToCurrentNumber(number, number.significantBits);
+        void WriteToCurrentNumber(BinaryNumber number, int significantBits) {
+            currentNumber <<= significantBits;
+            currentNumber |= number;
+            bitsUsed += significantBits;
+            if (freeBits == 0)
+                CreateNewNumber();
         }
 
         public void Write(byte value) {
-            Write(value, sizeof(byte));
+            WriteValue((ulong)value);
         }
 
         public void Write(ushort value) {
-            Write(value, sizeof(ushort));
+            WriteValue((ulong)value);
         }
 
         public void Write(short value) {
-            Write(value, sizeof(short));
+            WriteValue((ulong)value);
         }
 
         public void Write(uint value) {
-            Write(value, sizeof(uint));
+            WriteValue((ulong)value);
         }
 
         public void Write(int value) {
-            Write(value, sizeof(int));
+            WriteValue((ulong)value);
         }
 
         public void Write(long value) {
-            Write(value, sizeof(long));
+            WriteValue((ulong)value);
+        }
+
+        public void Write(ulong value) {
+            WriteValue(value);
         }
 
         public byte[] GetBytes() {
@@ -101,9 +102,14 @@ namespace SickDev.BinaryCompressor {
             for (int i = 0; i < bytesPerNumber.Length; i++)
                 bytesPerNumber[i] = numbers[i].GetBytes();
 
+            int index = 0;
             byte[] result = new byte[bytesPerNumber.Sum(x => x.Length)];
-            for (int i = 0; i < bytesPerNumber.Length; i++)
-                Array.Copy(bytesPerNumber[i], 0, result, i * BinaryNumber.maxBits / BinaryNumber.bitsPerByte, bytesPerNumber[i].Length);
+            for (int i = 0; i < bytesPerNumber.Length; i++) {
+                for (int j = 0; j < bytesPerNumber[i].Length; j++) {
+                    result[index] = bytesPerNumber[i][j];
+                    index++;
+                }
+            }
             return result;
         }
     }
