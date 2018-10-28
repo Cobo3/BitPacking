@@ -1,7 +1,7 @@
 ﻿using System;
 
 namespace SickDev.BinaryCompressor {
-    partial class BinaryNumber: IConvertible, IComparable<BinaryNumber>, IEquatable<BinaryNumber> {
+    public partial class BinaryNumber : IConvertible, IComparable<BinaryNumber>, IEquatable<BinaryNumber> {
 
         #region GetTypeCode
         public TypeCode GetTypeCode() {
@@ -75,23 +75,23 @@ namespace SickDev.BinaryCompressor {
 
         #region Operators
         public static BinaryNumber operator <<(BinaryNumber binary, int bits) {
-            return new BinaryNumber(binary.value << bits);
+            return binary.value << bits;
         }
 
         public static BinaryNumber operator >>(BinaryNumber binary, int bits) {
-            return new BinaryNumber(binary.value >> bits);
+            return binary.value >> bits;
         }
 
         public static BinaryNumber operator |(BinaryNumber binary, IConvertible number) {
-            return new BinaryNumber(binary.value | number.ToUInt64(null));
+            return binary.value | number.ToUInt64(null);
         }
 
         public static BinaryNumber operator &(BinaryNumber binary, IConvertible number) {
-            return new BinaryNumber(binary.value & number.ToUInt64(null));
+            return binary.value & number.ToUInt64(null);
         }
 
         public static BinaryNumber operator ^(BinaryNumber binary, IConvertible number) {
-            return new BinaryNumber(binary.value ^ number.ToUInt64(null));
+            return binary.value ^ number.ToUInt64(null);
         }
 
         public static bool operator ==(BinaryNumber binary, IConvertible number) {
@@ -102,8 +102,68 @@ namespace SickDev.BinaryCompressor {
             return binary.value != number.ToUInt64(null);
         }
 
-        public static BinaryNumber operator ~(BinaryNumber binary) {
-            return new BinaryNumber(~binary.value);
+        public static implicit operator BinaryNumber(sbyte number) {
+            return new BinaryNumber(number);
+        }
+
+        public static implicit operator BinaryNumber(byte number) {
+            return new BinaryNumber(number);
+        }
+
+        public static implicit operator BinaryNumber(ushort number) {
+            return new BinaryNumber(number);
+        }
+
+        public static implicit operator BinaryNumber(short number) {
+            return new BinaryNumber(number);
+        }
+
+        public static implicit operator BinaryNumber(uint number){
+            return new BinaryNumber(number);
+        }
+
+        public static implicit operator BinaryNumber(int number) {
+            return new BinaryNumber(number);
+        }
+
+        public static implicit operator BinaryNumber(ulong number) {
+            return new BinaryNumber(number);
+        }
+
+        public static implicit operator BinaryNumber(long number) {
+            return new BinaryNumber(number);
+        }
+
+        public static implicit operator sbyte(BinaryNumber number) {
+            return (sbyte)number.value;
+        }
+
+        public static implicit operator byte(BinaryNumber number) {
+            return (byte)number.value;
+        }
+
+        public static implicit operator ushort(BinaryNumber number) {
+            return (ushort)number.value;
+        }
+
+        public static implicit operator short(BinaryNumber number) {
+            return (short)number.value;
+        }
+
+        public static implicit operator uint(BinaryNumber number) {
+            return (uint)number.value;
+        }
+
+        public static implicit operator int(BinaryNumber number) {
+            return (int) number.value;
+        }
+
+        public static implicit operator ulong(BinaryNumber number) {
+            return number.value;
+        }
+
+        public static implicit operator long(BinaryNumber number) {
+            return (long)number.value;
         }
         #endregion
 

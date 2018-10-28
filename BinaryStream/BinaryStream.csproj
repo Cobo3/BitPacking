@@ -43,6 +43,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BinaryDecompressor.cs" />
     <Compile Include="BinaryNumber_ExtraMethods.cs" />
     <Compile Include="BinaryCompressor.cs" />
     <Compile Include="BinaryNumber.cs" />

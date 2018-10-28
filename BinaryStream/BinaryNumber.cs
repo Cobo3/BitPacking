@@ -2,7 +2,7 @@
 using System.Text;
 
 namespace SickDev.BinaryCompressor {
-    partial class BinaryNumber: IConvertible, IComparable<BinaryNumber>, IEquatable<BinaryNumber> {
+    public partial class BinaryNumber: IConvertible, IComparable<BinaryNumber>, IEquatable<BinaryNumber> {
         public const int maxBits = 63;
         public const int bitsPerByte = 8;
 
@@ -30,11 +30,11 @@ namespace SickDev.BinaryCompressor {
         }
 
         public byte[] GetBytes() {
-            byte[] result = new byte[(int)Math.Ceiling((float)bitsToShow/bitsPerByte)];
+            byte[] result = new byte[(int)Math.Ceiling((float)significantBits/bitsPerByte)];
             for (int i = 0; i < result.Length; i++) {
-                int shift = i * 8;
-                BinaryNumber shiftedResult = new BinaryNumber(value >> shift);
-                BinaryNumber binaryByte = new BinaryNumber((byte)shiftedResult.value);
+                int shift = (result.Length-1-i) * 8;
+                BinaryNumber shiftedResult = value >> shift;
+                BinaryNumber binaryByte = (byte)shiftedResult.value;
                 result[i] |= (byte)binaryByte.value;
             }
             return result;

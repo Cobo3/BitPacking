@@ -3,7 +3,7 @@ using System.Linq;
 using System.Collections.Generic;
 
 namespace SickDev.BinaryCompressor {
-    class BinaryCompressor {
+    public class BinaryCompressor {
 
         List<BinaryNumber> numbers;
         ulong maxNumber;
@@ -17,24 +17,25 @@ namespace SickDev.BinaryCompressor {
             set { numbers[numbers.Count - 1] = value; }
         }
 
-        public BinaryCompressor():this(uint.MaxValue) {}
-        public BinaryCompressor(ulong maxNumber) {
-            this.maxNumber = maxNumber;
+        public BinaryCompressor(IConvertible maxNumber) {
+            this.maxNumber = maxNumber.ToUInt64(null);
             maxSignificantBits = new BinaryNumber((new BinaryNumber(maxNumber)).significantBits).significantBits;
             numbers = new List<BinaryNumber>();
             CreateNewNumber();
         }
 
         void CreateNewNumber() {
-            numbers.Add(new BinaryNumber(0));
+            numbers.Add(0);
         }
 
         void WriteValue(ulong value) {
             if (value > maxNumber)
                 throw new Exception(string.Format("The input value {0} is greater than the max allowed value {1}", value, maxNumber));
 
-            BinaryNumber number = new BinaryNumber(value);
-            PreProcessWrite(new BinaryNumber(number.significantBits), maxSignificantBits);
+            BinaryNumber number = value;
+            //Write first how many significant bits does the number has
+            PreProcessWrite(number.significantBits, maxSignificantBits);
+            //Then write the numbe itself
             PreProcessWrite(number);
         }
 
@@ -50,12 +51,12 @@ namespace SickDev.BinaryCompressor {
                     mask <<= 1;
                     mask |= 1;
                 }
-                ulong leftOvers = number.value & mask;
+                BinaryNumber leftOvers = number.value & mask;
                 number ^= leftOvers;
                 number >>= leftOverBits;
 
                 WriteToCurrentNumber(number, number.significantBits);
-                number = new BinaryNumber(leftOvers);
+                number = leftOvers;
                 significantBits = leftOverBits;
             }
             WriteToCurrentNumber(number, significantBits);
@@ -65,16 +66,18 @@ namespace SickDev.BinaryCompressor {
             currentNumber <<= significantBits;
             currentNumber |= number;
             bitsUsed += significantBits;
+            if (bitsUsed < 0)
+                throw new Exception("We need a long instead of a int for bitsUsed");
             if (freeBits == 0)
                 CreateNewNumber();
         }
 
         public void Write(byte value) {
-            WriteValue((ulong)value);
+            WriteValue(value);
         }
 
         public void Write(ushort value) {
-            WriteValue((ulong)value);
+            WriteValue(value);
         }
 
         public void Write(short value) {
@@ -82,7 +85,7 @@ namespace SickDev.BinaryCompressor {
         }
 
         public void Write(uint value) {
-            WriteValue((ulong)value);
+            WriteValue(value);
         }
 
         public void Write(int value) {
@@ -111,6 +114,10 @@ namespace SickDev.BinaryCompressor {
                 }
             }
             return result;
+        }
+
+        public override string ToString() {
+            return string.Join(" ", numbers.Select(x => x.ToString()).ToArray());
         }
     }
 }
