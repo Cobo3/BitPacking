@@ -7,6 +7,7 @@ namespace SickDev.BinaryCompressor {
         int sizeBits;
         int _position;
         BinaryNumber currentNumber;
+        bool sizeZeroReached;
 
         int position {
             get { return _position; }
@@ -18,7 +19,7 @@ namespace SickDev.BinaryCompressor {
 
         int byteIndex { get { return position / BinaryNumber.bitsPerByte; } }
         int bitIndex { get { return position % BinaryNumber.bitsPerByte; } }
-        public bool canRead { get { return byteIndex < data.Length; } }
+        public bool canRead { get { return byteIndex < data.Length && !sizeZeroReached; } }
 
         public BinaryDecompressor(byte[] data, IConvertible maxNumber) {
             this.data = data;
@@ -33,13 +34,14 @@ namespace SickDev.BinaryCompressor {
             currentNumber = 0;
             for (int i = 0; i < length; i++) {
                 int bitIndexInData = position + i;
-                int byteIndex = bitIndexInData / 8;
-                int bitIndexInByte = bitIndexInData % 8;
+                int byteIndex = bitIndexInData / BinaryNumber.bitsPerByte;
+                int bitIndexInByte = bitIndexInData % BinaryNumber.bitsPerByte;
                 BinaryNumber binaryByte = data[byteIndex];
                 BinaryNumber mask = (1UL << bitIndexInByte);
-                BinaryNumber bitToWrite = binaryByte & mask;
-                bitToWrite <<= byteIndex * BinaryNumber.bitsPerByte;
-                currentNumber |= bitToWrite;
+                //If it is different than 0, then binaryByte has a "1" bit in that position
+                bool writeBit = (binaryByte & mask) != 0;
+                if (writeBit)
+                    currentNumber |= (1UL << i);
             }
         }
 
@@ -59,6 +61,10 @@ namespace SickDev.BinaryCompressor {
             position += sizeBits;
             ulong number = ReadInline(size);
             position += size;
+
+            if (ReadSize() == 0)
+                sizeZeroReached = true;
+
             return number;
         }
 
@@ -67,6 +73,9 @@ namespace SickDev.BinaryCompressor {
         }
 
         BinaryNumber ReadInline(int bits) {
+            if (!canRead)
+                throw new Exception("There's nothing else to read here");
+
             BinaryNumber mask = 1;
             for (int i = 0; i < bits - 1; i++) {
                 mask <<= 1;

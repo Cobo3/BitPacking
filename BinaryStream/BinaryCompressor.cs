@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text;
 using System.Linq;
 using System.Collections.Generic;
 
@@ -10,7 +11,7 @@ namespace SickDev.BinaryCompressor {
         int maxSignificantBits;
         int bitsUsed;
 
-        int freeBits { get { return numbers.Count * BinaryNumber.maxBits - bitsUsed; } }
+        int freeBits { get { return BinaryNumber.maxBits - bitsUsed; } }
 
         BinaryNumber currentNumber {
             get { return numbers[numbers.Count - 1]; }
@@ -26,6 +27,7 @@ namespace SickDev.BinaryCompressor {
 
         void CreateNewNumber() {
             numbers.Add(0);
+            bitsUsed = 0;
         }
 
         void WriteValue(ulong value) {
@@ -46,24 +48,23 @@ namespace SickDev.BinaryCompressor {
         void PreProcessWrite(BinaryNumber number, int significantBits) {
             while (significantBits > freeBits) {
                 int leftOverBits = significantBits - freeBits;
-                ulong mask = 1;
-                for (int i = 0; i < leftOverBits - 1; i++) {
+                BinaryNumber mask = 1;
+                for (int i = 0; i < freeBits-1; i++) {
                     mask <<= 1;
                     mask |= 1;
                 }
-                BinaryNumber leftOvers = number.value & mask;
-                number ^= leftOvers;
-                number >>= leftOverBits;
 
-                WriteToCurrentNumber(number, number.significantBits);
-                number = leftOvers;
+                int bitsToShift = freeBits;
+                WriteToCurrentNumber(number & mask, freeBits);
+
+                number >>= bitsToShift;
                 significantBits = leftOverBits;
             }
             WriteToCurrentNumber(number, significantBits);
         }
 
         void WriteToCurrentNumber(BinaryNumber number, int significantBits) {
-            currentNumber <<= significantBits;
+            number <<= bitsUsed;
             currentNumber |= number;
             bitsUsed += significantBits;
             if (bitsUsed < 0)
@@ -117,7 +118,13 @@ namespace SickDev.BinaryCompressor {
         }
 
         public override string ToString() {
-            return string.Join(" ", numbers.Select(x => x.ToString()).ToArray());
+            StringBuilder builder = new StringBuilder();
+            for (int i = 0; i < numbers.Count; i++) {
+                builder.Insert(0, numbers[i].ToString());
+                if (i != numbers.Count - 1)
+                    builder.Insert(0, " ");
+            }
+            return builder.ToString();
         }
     }
 }

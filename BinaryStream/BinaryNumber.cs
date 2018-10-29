@@ -2,18 +2,20 @@
 using System.Text;
 
 namespace SickDev.BinaryCompressor {
-    public partial class BinaryNumber: IConvertible, IComparable<BinaryNumber>, IEquatable<BinaryNumber> {
-        public const int maxBits = 63;
+    public partial struct BinaryNumber: IConvertible, IComparable<BinaryNumber>, IEquatable<BinaryNumber> {
+        public const int maxBits = 16;
         public const int bitsPerByte = 8;
 
         bool[] bits;
 
         public ulong value { get; private set; }
-        public int significantBits { get; protected set;}
+        public int significantBits { get; private set;}
         int bitsToShow { get { return Math.Min(maxBits, ((significantBits + bitsPerByte - 1) / bitsPerByte) * bitsPerByte); } }
 
         public BinaryNumber(IConvertible value) {
             this.value = value.ToUInt64(null);
+            bits = null;
+            significantBits = 0;
             SetBits();
         }
 
@@ -32,7 +34,7 @@ namespace SickDev.BinaryCompressor {
         public byte[] GetBytes() {
             byte[] result = new byte[(int)Math.Ceiling((float)significantBits/bitsPerByte)];
             for (int i = 0; i < result.Length; i++) {
-                int shift = (result.Length-1-i) * 8;
+                int shift = i * 8;
                 BinaryNumber shiftedResult = value >> shift;
                 BinaryNumber binaryByte = (byte)shiftedResult.value;
                 result[i] |= (byte)binaryByte.value;

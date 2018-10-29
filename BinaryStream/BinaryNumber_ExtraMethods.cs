@@ -1,7 +1,7 @@
 ﻿using System;
 
 namespace SickDev.BinaryCompressor {
-    public partial class BinaryNumber : IConvertible, IComparable<BinaryNumber>, IEquatable<BinaryNumber> {
+    public partial struct BinaryNumber : IConvertible, IComparable<BinaryNumber>, IEquatable<BinaryNumber> {
 
         #region GetTypeCode
         public TypeCode GetTypeCode() {
