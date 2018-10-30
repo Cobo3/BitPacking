@@ -1,0 +1,11 @@
+C:\Users\Cobo\Desktop\Game Career\Projects\Otros\BinaryStream\Test\obj\Debug\Test.csprojAssemblyReference.cache
+C:\Users\Cobo\Desktop\Game Career\Projects\Otros\BinaryStream\Test\obj\Debug\Test.csproj.CoreCompileInputs.cache
+C:\Users\Cobo\Desktop\Game Career\Projects\Otros\BinaryStream\Test\bin\Debug\Test.exe.config
+C:\Users\Cobo\Desktop\Game Career\Projects\Otros\BinaryStream\Test\bin\Debug\Test.exe
+C:\Users\Cobo\Desktop\Game Career\Projects\Otros\BinaryStream\Test\bin\Debug\Test.pdb
+C:\Users\Cobo\Desktop\Game Career\Projects\Otros\BinaryStream\Test\bin\Debug\BinaryStream.dll
+C:\Users\Cobo\Desktop\Game Career\Projects\Otros\BinaryStream\Test\bin\Debug\BinaryStream.pdb
+C:\Users\Cobo\Desktop\Game Career\Projects\Otros\BinaryStream\Test\bin\Debug\BinaryStream.dll.config
+C:\Users\Cobo\Desktop\Game Career\Projects\Otros\BinaryStream\Test\obj\Debug\Test.csproj.CopyComplete
+C:\Users\Cobo\Desktop\Game Career\Projects\Otros\BinaryStream\Test\obj\Debug\Test.exe
+C:\Users\Cobo\Desktop\Game Career\Projects\Otros\BinaryStream\Test\obj\Debug\Test.pdb
