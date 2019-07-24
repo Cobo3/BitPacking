@@ -5,7 +5,6 @@ using System.Collections.Generic;
 
 namespace SickDev.BinaryCompressor {
     public class BinaryCompressor {
-
         List<BinaryNumber> numbers;
         ulong maxNumber;
         int maxSignificantBits;

@@ -32,14 +32,14 @@ namespace SickDev.BinaryCompressor {
         }
 
         public byte[] GetBytes() {
-            byte[] result = new byte[(int)Math.Ceiling((float)significantBits/bitsPerByte)];
-            for (int i = 0; i < result.Length; i++) {
+            byte[] bytes = new byte[(int)Math.Ceiling((float)significantBits/bitsPerByte)];
+            for (int i = 0; i < bytes.Length; i++) {
                 int shift = i * 8;
                 BinaryNumber shiftedResult = value >> shift;
                 BinaryNumber binaryByte = (byte)shiftedResult.value;
-                result[i] |= (byte)binaryByte.value;
+				bytes[i] = (byte)binaryByte.value;
             }
-            return result;
+            return bytes;
         }
 
         public override string ToString() {

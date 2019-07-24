@@ -10,8 +10,8 @@ namespace SickDev.BinaryCompressor {
 
         static void Main(string[] args) {
             Random random = new Random();
-            for (int i = 0; i < numbers.Length; i++)
-                numbers[i] = random.Next(maxNumber);
+			for (int i = 0; i < numbers.Length; i++)
+				numbers[i] = random.Next(maxNumber);
 
             Compress();
             Decompress();
@@ -24,15 +24,31 @@ namespace SickDev.BinaryCompressor {
             compressedData = compressor.GetBytes();
 
             Console.WriteLine(string.Format("---Initial state---\nNumbers: {0}\nBytes: {1}\n\n---Final state---\nBytes: {2}",
-                numbers.Length, numbers.Length * sizeof(int), compressedData.Length));
+                numbers[0], numbers.Length * sizeof(int), compressedData.Length));
             Console.WriteLine();
         }
 
         static void Decompress() {
-            BinaryDecompressor decompressor = new BinaryDecompressor(compressedData, maxNumber);
+            BinaryDecompressor decompressor = new BinaryDecompressor(compressedData, numbers.Max());
             BinaryNumber[] decompressedNumbers = decompressor.ReadAll();
 
-            ulong[] result = decompressedNumbers.Select(x => x.value).ToArray();
+            int[] result = decompressedNumbers.Select(x => (int)x).ToArray();
+
+            if (result.Length != numbers.Length) {
+                Console.WriteLine("Wrong!");
+                return;
+            }
+
+            bool wrong = false;
+            for (int i = 0; i < result.Length; i++) {
+                if (result[i] != numbers[i]) {
+                    wrong = true;
+                    break;
+                }
+            }
+
+            if (wrong)
+                Console.WriteLine("Wrong!");
         }
     }
 }
