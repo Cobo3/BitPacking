@@ -23,8 +23,10 @@ namespace SickDev.BinaryCompressor {
 
         public BinaryDecompressor(byte[] data, IConvertible maxNumber) {
             this.data = data;
-            sizeBits = new BinaryNumber((new BinaryNumber(maxNumber)).significantBits).significantBits;
-            UpdateCurrentNumber();
+			BinaryNumber binaryMaxNumber = new BinaryNumber(maxNumber);
+			BinaryNumber binarySignifantBits = new BinaryNumber(binaryMaxNumber.significantBits);
+			sizeBits = binarySignifantBits.significantBits;
+			UpdateCurrentNumber();
         }
 
         void UpdateCurrentNumber() {

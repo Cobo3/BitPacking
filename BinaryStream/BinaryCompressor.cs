@@ -65,7 +65,7 @@ namespace SickDev.BinaryCompressor {
 
         void WriteToCurrentNumber(BinaryNumber number, int significantBits) {
             number <<= bitsUsed;
-            currentNumber = new BinaryNumber(currentNumber | number, BinaryNumber.maxBits);
+			currentNumber |= number;
             bitsUsed += significantBits;
             if (bitsUsed < 0)
                 throw new Exception("We need a long instead of a int for bitsUsed");
@@ -104,7 +104,7 @@ namespace SickDev.BinaryCompressor {
         public byte[] GetBytes() {
             byte[][] bytesPerNumber = new byte[numbers.Count][];
 			for (int i = 0; i < bytesPerNumber.Length; i++)
-				bytesPerNumber[i] = numbers[i].GetBytes();
+				bytesPerNumber[i] = numbers[i].GetBytes(BinaryNumber.maxBits);
 
             int index = 0;
             byte[] result = new byte[bytesPerNumber.Sum(x => x.Length)];

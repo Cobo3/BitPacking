@@ -12,8 +12,6 @@ namespace SickDev.BinaryCompressor {
         public int significantBits { get; private set;}
         int bitsToShow { get { return Math.Min(maxBits, ((significantBits + bitsPerByte - 1) / bitsPerByte) * bitsPerByte); } }
 
-		public BinaryNumber(IConvertible value, int significantBits) : this(value) => this.significantBits = significantBits;
-
         public BinaryNumber(IConvertible value) {
             this.value = value.ToUInt64(null);
             bits = null;
@@ -33,7 +31,9 @@ namespace SickDev.BinaryCompressor {
                 significantBits = 1;
         }
 
-        public byte[] GetBytes() {
+		public byte[] GetBytes() => GetBytes(significantBits);
+
+        public byte[] GetBytes(int significantBits) {
             byte[] bytes = new byte[(int)Math.Ceiling((float)significantBits/bitsPerByte)];
             for (int i = 0; i < bytes.Length; i++) {
                 int shift = i * 8;
