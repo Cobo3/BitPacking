@@ -18,13 +18,13 @@ namespace SickDev.BinaryCompressor {
         }
 
         int byteIndex { get { return position / BinaryNumber.bitsPerByte; } }
-        int bitIndex { get { return position % BinaryNumber.bitsPerByte; } }
+        int bitIndex { get { return position % BinaryNumber.bitsPerByte; } } //Bit index in byte
         public bool canRead { get { return byteIndex < data.Length && !sizeZeroReached; } }
 
         public BinaryDecompressor(byte[] data, IConvertible maxNumber) {
             this.data = data;
 			BinaryNumber binaryMaxNumber = new BinaryNumber(maxNumber);
-			BinaryNumber binarySignifantBits = new BinaryNumber(binaryMaxNumber.significantBits);
+			BinaryNumber binarySignifantBits = new BinaryNumber(binaryMaxNumber.significantBits-1);
 			sizeBits = binarySignifantBits.significantBits;
 			UpdateCurrentNumber();
         }
@@ -59,7 +59,7 @@ namespace SickDev.BinaryCompressor {
         }
 
         ulong ReadNext() {
-            int size = ReadSize();
+            int size = ReadSize()+1;
             position += sizeBits;
             ulong number = ReadInline(size);
             position += size;
@@ -83,7 +83,8 @@ namespace SickDev.BinaryCompressor {
                 mask <<= 1;
                 mask |= 1;
             }
-            return currentNumber & mask;
+			BinaryNumber value = currentNumber & mask;
+            return value;
         }
     }
 }
