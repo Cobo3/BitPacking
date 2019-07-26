@@ -4,16 +4,19 @@ using System.Linq;
 namespace SickDev.BinaryCompressor {
     class Program {
         static int maxNumber = ushort.MaxValue;
-        static int[] numbers = new int[100];
+		static int[] numbers = new int[100];
         static byte[] compressedData;
         static BinaryCompressor compressor;
 
         static void Main(string[] args) {
-            Random random = new Random();
+			Random random = new Random();
 			for (int i = 0; i < numbers.Length; i++)
 				numbers[i] = random.Next(maxNumber);
 
-            Compress();
+			for (int i = 0; i < numbers.Length; i++)
+				Console.WriteLine(i + ": " + numbers[i]);
+
+			Compress();
             Decompress();
         }
 
@@ -24,7 +27,7 @@ namespace SickDev.BinaryCompressor {
             compressedData = compressor.GetBytes();
 
             Console.WriteLine(string.Format("---Initial state---\nNumbers: {0}\nBytes: {1}\n\n---Final state---\nBytes: {2}",
-                numbers[0], numbers.Length * sizeof(int), compressedData.Length));
+                numbers.Length, numbers.Length * sizeof(int), compressedData.Length));
             Console.WriteLine();
         }
 

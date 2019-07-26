@@ -12,6 +12,8 @@ namespace SickDev.BinaryCompressor {
         public int significantBits { get; private set;}
         int bitsToShow { get { return Math.Min(maxBits, ((significantBits + bitsPerByte - 1) / bitsPerByte) * bitsPerByte); } }
 
+		public BinaryNumber(IConvertible value, int significantBits) : this(value) => this.significantBits = significantBits;
+
         public BinaryNumber(IConvertible value) {
             this.value = value.ToUInt64(null);
             bits = null;

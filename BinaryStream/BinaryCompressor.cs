@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace SickDev.BinaryCompressor {
     public class BinaryCompressor {
-        List<BinaryNumber> numbers;
+        List<BinaryNumber> numbers = new List<BinaryNumber>();
         ulong maxNumber;
         int maxSignificantBits;
         int bitsUsed;
@@ -19,8 +19,9 @@ namespace SickDev.BinaryCompressor {
 
         public BinaryCompressor(IConvertible maxNumber) {
             this.maxNumber = maxNumber.ToUInt64(null);
-            maxSignificantBits = new BinaryNumber((new BinaryNumber(maxNumber)).significantBits).significantBits;
-            numbers = new List<BinaryNumber>();
+			BinaryNumber binaryMaxNumber = new BinaryNumber(maxNumber);
+			BinaryNumber binarySignifantBits = new BinaryNumber(binaryMaxNumber.significantBits);
+            maxSignificantBits = binarySignifantBits.significantBits;
             CreateNewNumber();
         }
 
@@ -33,7 +34,7 @@ namespace SickDev.BinaryCompressor {
             if (value > maxNumber)
                 throw new Exception(string.Format("The input value {0} is greater than the max allowed value {1}", value, maxNumber));
 
-            BinaryNumber number = value;
+            BinaryNumber number = new BinaryNumber(value);
             //Write first how many significant bits does the number has
             PreProcessWrite(number.significantBits, maxSignificantBits);
             //Then write the numbe itself
@@ -64,7 +65,7 @@ namespace SickDev.BinaryCompressor {
 
         void WriteToCurrentNumber(BinaryNumber number, int significantBits) {
             number <<= bitsUsed;
-            currentNumber |= number;
+            currentNumber = new BinaryNumber(currentNumber | number, BinaryNumber.maxBits);
             bitsUsed += significantBits;
             if (bitsUsed < 0)
                 throw new Exception("We need a long instead of a int for bitsUsed");
@@ -102,8 +103,8 @@ namespace SickDev.BinaryCompressor {
 
         public byte[] GetBytes() {
             byte[][] bytesPerNumber = new byte[numbers.Count][];
-            for (int i = 0; i < bytesPerNumber.Length; i++)
-                bytesPerNumber[i] = numbers[i].GetBytes();
+			for (int i = 0; i < bytesPerNumber.Length; i++)
+				bytesPerNumber[i] = numbers[i].GetBytes();
 
             int index = 0;
             byte[] result = new byte[bytesPerNumber.Sum(x => x.Length)];
