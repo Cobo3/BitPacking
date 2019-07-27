@@ -17,9 +17,9 @@ namespace SickDev.BinaryCompressor {
             }
         }
 
-        int byteIndex { get { return position / BinaryNumber.bitsPerByte; } }
-        int bitIndex { get { return position % BinaryNumber.bitsPerByte; } } //Bit index in byte
-        public bool canRead { get { return byteIndex < data.Length && valuesToRead > 0; } }
+        int byteIndex => position / BinaryNumber.bitsPerByte;
+        int bitIndex => position % BinaryNumber.bitsPerByte; //Bit index in byte
+        public bool canRead => byteIndex < data.Length && valuesToRead > 0;
 
         public BinaryDecompressor(byte[] data, IConvertible maxNumber) {
 			valuesToRead = BitConverter.ToUInt64(data, 0);
@@ -59,22 +59,16 @@ namespace SickDev.BinaryCompressor {
         }
 
         public BinaryNumber Read() {
-            return ReadNext();
-        }
-
-        ulong ReadNext() {
             int size = ReadSize();
             position += sizeBits;
-            ulong number = ReadInline(size);
+            BinaryNumber number = ReadInline(size);
             position += size;
 
 			valuesToRead--;
             return number;
         }
 
-        public int ReadSize() {
-            return ReadInline(sizeBits)+1;
-        }
+        public int ReadSize() => ReadInline(sizeBits)+1;
 
         BinaryNumber ReadInline(int bits) {
             if (!canRead)

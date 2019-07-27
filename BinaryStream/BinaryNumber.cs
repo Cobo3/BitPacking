@@ -6,11 +6,12 @@ namespace SickDev.BinaryCompressor {
         public const int maxBits = 16;
         public const int bitsPerByte = 8;
 
+		public readonly ulong value;
         bool[] bits;
 
-        public ulong value { get; private set; }
-        public int significantBits { get; private set;}
-        int bitsToShow { get { return Math.Min(maxBits, ((significantBits + bitsPerByte - 1) / bitsPerByte) * bitsPerByte); } }
+		public int significantBits { get; private set; }
+
+        int bitsToShow => Math.Min(maxBits, ((significantBits + bitsPerByte - 1) / bitsPerByte) * bitsPerByte);
 
         public BinaryNumber(IConvertible value) {
             this.value = value.ToUInt64(null);

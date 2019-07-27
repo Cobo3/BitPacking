@@ -11,13 +11,11 @@ namespace SickDev.BinaryCompressor {
         int bitsUsed;
 		ulong valuesWritten;
 
-        int freeBits { get { return BinaryNumber.maxBits - bitsUsed; } }
-
-		//El compressor necesita incluir en el compressedData la cantidad de valores que se han guardado. Si no, el Decompressor no sabe nunca cuándo parar
+        int freeBits => BinaryNumber.maxBits - bitsUsed;
 
         BinaryNumber currentNumber {
-            get { return numbers[numbers.Count - 1]; }
-            set { numbers[numbers.Count - 1] = value; }
+			get => numbers[numbers.Count - 1];
+            set => numbers[numbers.Count - 1] = value;
         }
 
         public BinaryCompressor(IConvertible maxNumber) {
@@ -45,9 +43,7 @@ namespace SickDev.BinaryCompressor {
 			valuesWritten++;
         }
 
-        void PreProcessWrite(BinaryNumber number) {
-            PreProcessWrite(number, number.significantBits);
-        }
+        void PreProcessWrite(BinaryNumber number) => PreProcessWrite(number, number.significantBits);
 
         void PreProcessWrite(BinaryNumber number, int significantBits) {
             while (significantBits > freeBits) {
@@ -78,34 +74,6 @@ namespace SickDev.BinaryCompressor {
                 CreateNewNumber();
         }
 
-        public void Write(byte value) {
-            WriteValue(value);
-        }
-
-        public void Write(ushort value) {
-            WriteValue(value);
-        }
-
-        public void Write(short value) {
-            WriteValue((ulong)value);
-        }
-
-        public void Write(uint value) {
-            WriteValue(value);
-        }
-
-        public void Write(int value) {
-            WriteValue((ulong)value);
-        }
-
-        public void Write(long value) {
-            WriteValue((ulong)value);
-        }
-
-        public void Write(ulong value) {
-            WriteValue(value);
-        }
-
         public byte[] GetBytes() {
             byte[][] bytesPerNumber = new byte[numbers.Count][];
 			for (int i = 0; i < bytesPerNumber.Length; i++)
@@ -134,6 +102,14 @@ namespace SickDev.BinaryCompressor {
                     builder.Insert(0, " ");
             }
             return builder.ToString();
-        }
-    }
+		}
+
+		public void Write(byte value) => WriteValue(value);
+		public void Write(ushort value) => WriteValue(value);
+		public void Write(short value) => WriteValue((ulong)value);
+		public void Write(uint value) => WriteValue(value);
+		public void Write(int value) => WriteValue((ulong)value);
+		public void Write(long value) => WriteValue((ulong)value);
+		public void Write(ulong value) => WriteValue(value);
+	}
 }
