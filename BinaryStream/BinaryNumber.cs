@@ -3,7 +3,7 @@ using System.Text;
 
 namespace SickDev.BinaryCompressor {
     public partial struct BinaryNumber: IConvertible, IComparable<BinaryNumber>, IEquatable<BinaryNumber> {
-        public const int maxBits = 16;
+        public const int maxBits = 64;
         public const int bitsPerByte = 8;
 
 		public readonly ulong value;
