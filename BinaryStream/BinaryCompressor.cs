@@ -76,8 +76,9 @@ namespace SickDev.BinaryCompressor {
 
         public byte[] GetBytes() {
             byte[][] bytesPerNumber = new byte[numbers.Count][];
-			for (int i = 0; i < bytesPerNumber.Length; i++)
-				bytesPerNumber[i] = numbers[i].GetBytes(Math.Max(numbers[i].significantBits, maxNumber.significantBits));
+			for (int i = 0; i < bytesPerNumber.Length-1; i++)
+				bytesPerNumber[i] = numbers[i].GetBytes(BinaryNumber.maxBits);
+			bytesPerNumber[bytesPerNumber.Length-1] = currentNumber.GetBytes(bitsUsed);
 
 			byte[] valuesWrittenBytes = BitConverter.GetBytes(valuesWritten);
             byte[] result = new byte[bytesPerNumber.Sum(x => x.Length)+valuesWrittenBytes.Length];
