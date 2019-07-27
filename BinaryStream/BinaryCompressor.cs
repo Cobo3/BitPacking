@@ -6,7 +6,7 @@ using System.Collections.Generic;
 namespace SickDev.BinaryCompressor {
     public class BinaryCompressor {
         List<BinaryNumber> numbers = new List<BinaryNumber>();
-        ulong maxNumber;
+        BinaryNumber maxNumber;
         int maxSignificantBits;
         int bitsUsed;
 		ulong valuesWritten;
@@ -77,7 +77,7 @@ namespace SickDev.BinaryCompressor {
         public byte[] GetBytes() {
             byte[][] bytesPerNumber = new byte[numbers.Count][];
 			for (int i = 0; i < bytesPerNumber.Length; i++)
-				bytesPerNumber[i] = numbers[i].GetBytes(BinaryNumber.maxBits);
+				bytesPerNumber[i] = numbers[i].GetBytes(Math.Max(numbers[i].significantBits, maxNumber.significantBits));
 
 			byte[] valuesWrittenBytes = BitConverter.GetBytes(valuesWritten);
             byte[] result = new byte[bytesPerNumber.Sum(x => x.Length)+valuesWrittenBytes.Length];
