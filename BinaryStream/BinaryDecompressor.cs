@@ -7,7 +7,7 @@ namespace SickDev.BinaryCompressor {
         int sizeBits;
         int _position;
         BinaryNumber currentNumber;
-        bool sizeZeroReached;
+		ulong valuesToRead;
 
         int position {
             get { return _position; }
@@ -19,13 +19,17 @@ namespace SickDev.BinaryCompressor {
 
         int byteIndex { get { return position / BinaryNumber.bitsPerByte; } }
         int bitIndex { get { return position % BinaryNumber.bitsPerByte; } } //Bit index in byte
-        public bool canRead { get { return byteIndex < data.Length && !sizeZeroReached; } }
+        public bool canRead { get { return byteIndex < data.Length && valuesToRead > 0; } }
 
         public BinaryDecompressor(byte[] data, IConvertible maxNumber) {
-            this.data = data;
+			valuesToRead = BitConverter.ToUInt64(data, 0);
+            this.data = new byte[data.Length-sizeof(ulong)];
+			Array.Copy(data, sizeof(ulong), this.data, 0, this.data.Length);
+
 			BinaryNumber binaryMaxNumber = new BinaryNumber(maxNumber);
 			BinaryNumber binarySignifantBits = new BinaryNumber(binaryMaxNumber.significantBits-1);
 			sizeBits = binarySignifantBits.significantBits;
+
 			UpdateCurrentNumber();
         }
 
@@ -59,19 +63,17 @@ namespace SickDev.BinaryCompressor {
         }
 
         ulong ReadNext() {
-            int size = ReadSize()+1;
+            int size = ReadSize();
             position += sizeBits;
             ulong number = ReadInline(size);
             position += size;
 
-            if (ReadSize() == 0)
-                sizeZeroReached = true;
-
+			valuesToRead--;
             return number;
         }
 
         public int ReadSize() {
-            return ReadInline(sizeBits);
+            return ReadInline(sizeBits)+1;
         }
 
         BinaryNumber ReadInline(int bits) {

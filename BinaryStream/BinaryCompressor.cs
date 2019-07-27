@@ -9,8 +9,11 @@ namespace SickDev.BinaryCompressor {
         ulong maxNumber;
         int maxSignificantBits;
         int bitsUsed;
+		ulong valuesWritten;
 
         int freeBits { get { return BinaryNumber.maxBits - bitsUsed; } }
+
+		//El compressor necesita incluir en el compressedData la cantidad de valores que se han guardado. Si no, el Decompressor no sabe nunca cuándo parar
 
         BinaryNumber currentNumber {
             get { return numbers[numbers.Count - 1]; }
@@ -39,6 +42,7 @@ namespace SickDev.BinaryCompressor {
             PreProcessWrite(number.significantBits-1, maxSignificantBits);
             //Then write the numbe itself
             PreProcessWrite(number);
+			valuesWritten++;
         }
 
         void PreProcessWrite(BinaryNumber number) {
@@ -107,14 +111,18 @@ namespace SickDev.BinaryCompressor {
 			for (int i = 0; i < bytesPerNumber.Length; i++)
 				bytesPerNumber[i] = numbers[i].GetBytes(BinaryNumber.maxBits);
 
-            int index = 0;
-            byte[] result = new byte[bytesPerNumber.Sum(x => x.Length)];
+			byte[] valuesWrittenBytes = BitConverter.GetBytes(valuesWritten);
+            byte[] result = new byte[bytesPerNumber.Sum(x => x.Length)+valuesWrittenBytes.Length];
+			Array.Copy(valuesWrittenBytes, 0, result, 0, valuesWrittenBytes.Length);
+            int index = valuesWrittenBytes.Length;
+
             for (int i = 0; i < bytesPerNumber.Length; i++) {
                 for (int j = 0; j < bytesPerNumber[i].Length; j++) {
                     result[index] = bytesPerNumber[i][j];
                     index++;
                 }
             }
+
             return result;
         }
 
