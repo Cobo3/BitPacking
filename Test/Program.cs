@@ -13,6 +13,14 @@ namespace SickDev.BinaryCompressor {
 			for (int i = 0; i < numbers.Length; i++)
 				numbers[i] = random.Next(maxNumber);
 
+			//Hay que hacer que se puedan writear 1s y 0s, haciendo que lo de eliminar el 1r "1" sea solo si el significantBits es > 1
+			//Hay que añadir esta feature al maxSignificantBits
+			//+Clean el código este de mierda
+
+			numbers = new int[] {
+				1
+			};
+
 			for (int i = 0; i < numbers.Length; i++)
 				Console.WriteLine(i + ": " + numbers[i]);
 

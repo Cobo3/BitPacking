@@ -65,7 +65,9 @@ namespace SickDev.BinaryCompressor {
             position += size;
 
 			valuesToRead--;
-            return number;
+			BinaryNumber mask = (1UL << size);
+
+			return number | mask;
         }
 
         public int ReadSize() => ReadInline(sizeBits)+1;

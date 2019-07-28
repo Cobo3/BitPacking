@@ -20,8 +20,7 @@ namespace SickDev.BinaryCompressor {
 
         public BinaryCompressor(IConvertible maxNumber) {
             this.maxNumber = maxNumber.ToUInt64(null);
-			BinaryNumber binaryMaxNumber = new BinaryNumber(maxNumber);
-			BinaryNumber binarySignifantBits = new BinaryNumber(binaryMaxNumber.significantBits-1);
+			BinaryNumber binarySignifantBits = new BinaryNumber(this.maxNumber.significantBits-1);
             maxSignificantBits = binarySignifantBits.significantBits;
             CreateNewNumber();
         }
@@ -37,9 +36,17 @@ namespace SickDev.BinaryCompressor {
 
             BinaryNumber number = new BinaryNumber(value);
             //Write first how many significant bits does the number has
-            PreProcessWrite(number.significantBits-1, maxSignificantBits);
-            //Then write the numbe itself
-            PreProcessWrite(number);
+            PreProcessWrite(number.significantBits-2, maxSignificantBits);
+			//Then write the numbe itself
+
+			BinaryNumber mask = 1;
+			for (int i = 0; i < number.significantBits-2; i++)
+			{
+				mask <<= 1;
+				mask |= 1;
+			}
+
+			PreProcessWrite(number & mask, number.significantBits-1);
 			valuesWritten++;
         }
 
