@@ -50,6 +50,7 @@
     <Compile Include="BinaryNumber_ExtraMethods.cs" />
     <Compile Include="BinaryCompressor.cs" />
     <Compile Include="BinaryNumber.cs" />
+    <Compile Include="MaskUtility.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -43,7 +43,7 @@ namespace SickDev.BinaryCompressor {
                 int byteIndex = bitIndexInData / BinaryNumber.bitsPerByte;
                 int bitIndexInByte = bitIndexInData % BinaryNumber.bitsPerByte;
                 BinaryNumber binaryByte = data[byteIndex];
-                BinaryNumber mask = (1UL << bitIndexInByte);
+                BinaryNumber mask = MaskUtility.MakeShifted(bitIndexInByte);
                 //If it is different than 0, then binaryByte has a "1" bit in that position
                 bool writeBit = (binaryByte & mask) != 0;
                 if (writeBit)
@@ -65,7 +65,8 @@ namespace SickDev.BinaryCompressor {
             position += size;
 
 			valuesToRead--;
-			BinaryNumber mask = (1UL << size);
+			//Add "1" as the most significant bit of the number, as it was omitted when compressed
+			BinaryNumber mask = MaskUtility.MakeShifted(size);
 
 			return number | mask;
         }
@@ -76,11 +77,7 @@ namespace SickDev.BinaryCompressor {
             if (!canRead)
                 throw new Exception("There's nothing else to read here");
 
-            BinaryNumber mask = 1;
-            for (int i = 0; i < bits - 1; i++) {
-                mask <<= 1;
-                mask |= 1;
-            }
+			BinaryNumber mask = MaskUtility.MakeFilled(bits);
 			BinaryNumber value = currentNumber & mask;
             return value;
         }

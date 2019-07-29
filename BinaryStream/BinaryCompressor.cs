@@ -35,31 +35,27 @@ namespace SickDev.BinaryCompressor {
                 throw new Exception(string.Format("The input value {0} is greater than the max allowed value {1}", value, maxNumber));
 
             BinaryNumber number = new BinaryNumber(value);
+			int significantBits = number.significantBits;
+
             //Write first how many significant bits does the number has
-            PreProcessWrite(number.significantBits-2, maxSignificantBits);
+			//Minus 1 to be able to use "0" as a "1"
+			//Minus 1 to remove the most significant bit
+            PreProcessWrite(significantBits-2, maxSignificantBits);
+
+			//Then remove the most significant bit since it's always 1
+			BinaryNumber mask = MaskUtility.MakeFilled(significantBits - 1);
+			number &= mask;
+
 			//Then write the numbe itself
-
-			BinaryNumber mask = 1;
-			for (int i = 0; i < number.significantBits-2; i++)
-			{
-				mask <<= 1;
-				mask |= 1;
-			}
-
-			PreProcessWrite(number & mask, number.significantBits-1);
+			//Minus 1 since we removed the most significant bit
+			PreProcessWrite(number, significantBits-1);
 			valuesWritten++;
         }
-
-        void PreProcessWrite(BinaryNumber number) => PreProcessWrite(number, number.significantBits);
 
         void PreProcessWrite(BinaryNumber number, int significantBits) {
             while (significantBits > freeBits) {
                 int leftOverBits = significantBits - freeBits;
-                BinaryNumber mask = 1;
-                for (int i = 0; i < freeBits-1; i++) {
-                    mask <<= 1;
-                    mask |= 1;
-                }
+                BinaryNumber mask = MaskUtility.MakeFilled(freeBits);
 
                 int bitsToShift = freeBits;
 				BinaryNumber maskedNumber = number & mask;
