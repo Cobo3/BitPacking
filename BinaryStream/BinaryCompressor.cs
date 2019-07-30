@@ -20,7 +20,6 @@ namespace SickDev.BinaryCompressor {
 
         public BinaryCompressor(IConvertible maxNumber) {
             this.maxNumber = maxNumber.ToUInt64(null);
-			this.maxNumber += 2;
 			BinaryNumber binarySignifantBits = new BinaryNumber(this.maxNumber.significantBits-1);
             maxSignificantBits = binarySignifantBits.significantBits;
             CreateNewNumber();
@@ -32,26 +31,17 @@ namespace SickDev.BinaryCompressor {
         }
 
         void WriteValue(ulong value) {
-			value += 2;
             if (value > maxNumber)
                 throw new Exception(string.Format("The input value {0} is greater than the max allowed value {1}", value, maxNumber));
 
             BinaryNumber number = new BinaryNumber(value);
 			int significantBits = number.significantBits;
 
-			//Minus 1 to be able to use "0" as a "1"
-			significantBits--;
-
             //Write first how many significant bits does the number has
-			//Minus 1 to remove the most significant bit
+			//Minus 1 to be able to use "0" as a "1"
             PreProcessWrite(significantBits-1, maxSignificantBits);
 
-			//Then remove the most significant bit since it's always 1
-			BinaryNumber mask = MaskUtility.MakeFilled(significantBits);
-			number &= mask;
-
 			//Then write the numbe itself
-			//Minus 1 since we removed the most significant bit
 			PreProcessWrite(number, significantBits);
 			valuesWritten++;
         }
