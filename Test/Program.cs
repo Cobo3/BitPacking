@@ -3,26 +3,22 @@ using System.Linq;
 
 namespace SickDev.BinaryCompressor {
     class Program {
-        static int maxNumber = ushort.MaxValue;
-		static int[] numbers = new int[100];
+        static int maxNumber = byte.MaxValue;
+		static byte[] numbers = new byte[10000];
         static byte[] compressedData;
         static BinaryCompressor compressor;
 
         static void Main(string[] args) {
-			Random random = new Random();
+			Random random = new Random(0);
 			for (int i = 0; i < numbers.Length; i++)
-				numbers[i] = random.Next(maxNumber);
+				numbers[i] = (byte)random.Next(maxNumber);
 
-			//Hay que hacer que se puedan writear 1s y 0s, haciendo que lo de eliminar el 1r "1" sea solo si el significantBits es > 1
-			//Hay que añadir esta feature al maxSignificantBits
-			//+Clean el código este de mierda
+			//numbers = new int[] {
+			//	255
+			//};
 
-			numbers = new int[] {
-				1
-			};
-
-			for (int i = 0; i < numbers.Length; i++)
-				Console.WriteLine(i + ": " + numbers[i]);
+			//for (int i = 0; i < numbers.Length; i++)
+			//	Console.WriteLine(i + ": " + numbers[i]);
 
 			Compress();
             Decompress();
@@ -35,7 +31,7 @@ namespace SickDev.BinaryCompressor {
             compressedData = compressor.GetBytes();
 
             Console.WriteLine(string.Format("---Initial state---\nNumbers: {0}\nBytes: {1}\n\n---Final state---\nBytes: {2}",
-                numbers.Length, numbers.Length * sizeof(int), compressedData.Length));
+                numbers.Length, numbers.Length * sizeof(byte), compressedData.Length));
             Console.WriteLine();
         }
 

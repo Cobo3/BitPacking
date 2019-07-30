@@ -27,6 +27,7 @@ namespace SickDev.BinaryCompressor {
 			Array.Copy(data, sizeof(ulong), this.data, 0, this.data.Length);
 
 			BinaryNumber binaryMaxNumber = new BinaryNumber(maxNumber);
+			binaryMaxNumber += 2;
 			BinaryNumber binarySignifantBits = new BinaryNumber(binaryMaxNumber.significantBits-1);
 			sizeBits = binarySignifantBits.significantBits;
 
@@ -65,6 +66,11 @@ namespace SickDev.BinaryCompressor {
             position += size;
 
 			valuesToRead--;
+
+			//Add "1" as the most significant bit of the number, as it was omitted when compressed
+			BinaryNumber mask = MaskUtility.MakeShifted(size);
+			number |= mask;
+			number -= 2;
 
 			return number;
         }
