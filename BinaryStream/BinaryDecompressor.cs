@@ -28,7 +28,7 @@ namespace SickDev.BinaryCompressor {
 
 			BinaryNumber binaryMaxNumber = new BinaryNumber(maxNumber);
 			binaryMaxNumber += 2;
-			BinaryNumber binarySignifantBits = new BinaryNumber(binaryMaxNumber.significantBits-1);
+			BinaryNumber binarySignifantBits = new BinaryNumber(binaryMaxNumber.significantBits-2);
 			sizeBits = binarySignifantBits.significantBits;
 
 			UpdateCurrentNumber();

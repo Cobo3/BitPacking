@@ -21,7 +21,7 @@ namespace SickDev.BinaryCompressor {
         public BinaryCompressor(IConvertible maxNumber) {
             this.maxNumber = maxNumber.ToUInt64(null);
 			this.maxNumber += 2;
-			BinaryNumber binarySignifantBits = new BinaryNumber(this.maxNumber.significantBits-1);
+			BinaryNumber binarySignifantBits = new BinaryNumber(this.maxNumber.significantBits-2);
             maxSignificantBits = binarySignifantBits.significantBits;
             CreateNewNumber();
         }
