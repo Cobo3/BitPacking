@@ -6,10 +6,7 @@ using System.Collections.Generic;
 namespace SickDev.BinaryCompressor {
     public class BinaryCompressor {
         List<BinaryNumber> numbers = new List<BinaryNumber>();
-        BinaryNumber maxNumber;
-        int maxSignificantBits;
         int bitsUsed;
-		ulong valuesWritten;
 
         int freeBits => BinaryNumber.maxBits - bitsUsed;
 
@@ -18,11 +15,7 @@ namespace SickDev.BinaryCompressor {
             set => numbers[numbers.Count - 1] = value;
         }
 
-        public BinaryCompressor(IConvertible maxNumber) {
-            this.maxNumber = maxNumber.ToUInt64(null);
-			this.maxNumber += 2;
-			BinaryNumber binarySignifantBits = new BinaryNumber(this.maxNumber.significantBits-2);
-            maxSignificantBits = binarySignifantBits.significantBits;
+        public BinaryCompressor() {
             CreateNewNumber();
         }
 
@@ -31,33 +24,9 @@ namespace SickDev.BinaryCompressor {
             bitsUsed = 0;
         }
 
-        void WriteValue(ulong value) {
-			value += 2;
-            if (value > maxNumber)
-                throw new Exception(string.Format("The input value {0} is greater than the max allowed value {1}", value, maxNumber));
-
-            BinaryNumber number = new BinaryNumber(value);
+        void WriteValue(BinaryNumber number) {
 			int significantBits = number.significantBits;
-
-			//Minus 1 to be able to use "0" as a "1"
-			significantBits--;
-
-            //Write first how many significant bits does the number has
-			//Minus 1 to remove the most significant bit
-            PreProcessWrite(significantBits-1, maxSignificantBits);
-
-			//Then remove the most significant bit since it's always 1
-			BinaryNumber mask = MaskUtility.MakeFilled(significantBits);
-			number &= mask;
-
-			//Then write the numbe itself
-			//Minus 1 since we removed the most significant bit
-			PreProcessWrite(number, significantBits);
-			valuesWritten++;
-        }
-
-        void PreProcessWrite(BinaryNumber number, int significantBits) {
-            while (significantBits > freeBits) {
+			while (significantBits > freeBits) {
                 int leftOverBits = significantBits - freeBits;
                 BinaryNumber mask = MaskUtility.MakeFilled(freeBits);
 
@@ -87,10 +56,8 @@ namespace SickDev.BinaryCompressor {
 				bytesPerNumber[i] = numbers[i].GetBytes(BinaryNumber.maxBits);
 			bytesPerNumber[bytesPerNumber.Length-1] = currentNumber.GetBytes(bitsUsed);
 
-			byte[] valuesWrittenBytes = BitConverter.GetBytes(valuesWritten);
-            byte[] result = new byte[bytesPerNumber.Sum(x => x.Length)+valuesWrittenBytes.Length];
-			Array.Copy(valuesWrittenBytes, 0, result, 0, valuesWrittenBytes.Length);
-            int index = valuesWrittenBytes.Length;
+            byte[] result = new byte[bytesPerNumber.Sum(x => x.Length)];
+            int index = 0;
 
             for (int i = 0; i < bytesPerNumber.Length; i++) {
                 for (int j = 0; j < bytesPerNumber[i].Length; j++) {

@@ -1,13 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
 
 namespace SickDev.BinaryCompressor {
     public class BinaryDecompressor {
         byte[] data;
-        int sizeBits;
         int _position;
         BinaryNumber currentNumber;
-		ulong valuesToRead;
 
         int position {
             get { return _position; }
@@ -19,18 +16,10 @@ namespace SickDev.BinaryCompressor {
 
         int byteIndex => position / BinaryNumber.bitsPerByte;
         int bitIndex => position % BinaryNumber.bitsPerByte; //Bit index in byte
-        public bool canRead => byteIndex < data.Length && valuesToRead > 0;
+        public bool canRead => byteIndex < data.Length;
 
-        public BinaryDecompressor(byte[] data, IConvertible maxNumber) {
-			valuesToRead = BitConverter.ToUInt64(data, 0);
-            this.data = new byte[data.Length-sizeof(ulong)];
-			Array.Copy(data, sizeof(ulong), this.data, 0, this.data.Length);
-
-			BinaryNumber binaryMaxNumber = new BinaryNumber(maxNumber);
-			binaryMaxNumber += 2;
-			BinaryNumber binarySignifantBits = new BinaryNumber(binaryMaxNumber.significantBits-2);
-			sizeBits = binarySignifantBits.significantBits;
-
+        public BinaryDecompressor(byte[] data) {
+			this.data = data;
 			UpdateCurrentNumber();
         }
 
@@ -52,38 +41,15 @@ namespace SickDev.BinaryCompressor {
             }
         }
 
-        public BinaryNumber[] ReadAll() {
-            List<BinaryNumber> numbers = new List<BinaryNumber>();
-            while (canRead)
-                numbers.Add(Read());
-            return numbers.ToArray();
-        }
-
-        public BinaryNumber Read() {
-            int size = ReadSize();
-            position += sizeBits;
-            BinaryNumber number = ReadInline(size);
-            position += size;
-
-			valuesToRead--;
-
-			//Add "1" as the most significant bit of the number, as it was omitted when compressed
-			BinaryNumber mask = MaskUtility.MakeShifted(size);
-			number |= mask;
-			number -= 2;
-
-			return number;
-        }
-
-        public int ReadSize() => ReadInline(sizeBits)+1;
-
-        BinaryNumber ReadInline(int bits) {
+        public BinaryNumber Read(int bits) {
             if (!canRead)
                 throw new Exception("There's nothing else to read here");
 
 			BinaryNumber mask = MaskUtility.MakeFilled(bits);
 			BinaryNumber value = currentNumber & mask;
-            return value;
+
+            position += bits;
+			return value;
         }
     }
 }
