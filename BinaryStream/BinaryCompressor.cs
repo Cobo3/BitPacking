@@ -24,25 +24,26 @@ namespace SickDev.BinaryCompressor {
             bitsUsed = 0;
         }
 
-        void WriteValue(BinaryNumber number) {
-			int significantBits = number.significantBits;
+		void WriteValue(BinaryNumber value) => WriteValue(value, value.significantBits);
+
+        void WriteValue(BinaryNumber value, int significantBits) {
 			while (significantBits > freeBits) {
                 int leftOverBits = significantBits - freeBits;
                 BinaryNumber mask = MaskUtility.MakeFilled(freeBits);
 
                 int bitsToShift = freeBits;
-				BinaryNumber maskedNumber = number & mask;
+				BinaryNumber maskedNumber = value & mask;
                 WriteToCurrentNumber(maskedNumber, freeBits);
 
-                number >>= bitsToShift;
+                value >>= bitsToShift;
                 significantBits = leftOverBits;
             }
-            WriteToCurrentNumber(number, significantBits);
+            WriteToCurrentNumber(value, significantBits);
         }
 
-        void WriteToCurrentNumber(BinaryNumber number, int significantBits) {
-            number <<= bitsUsed;
-			currentNumber |= number;
+        void WriteToCurrentNumber(BinaryNumber value, int significantBits) {
+            value <<= bitsUsed;
+			currentNumber |= value;
             bitsUsed += significantBits;
             if (bitsUsed < 0)
                 throw new Exception("We need a long instead of a int for bitsUsed");
@@ -84,7 +85,14 @@ namespace SickDev.BinaryCompressor {
 		public void Write(short value) => WriteValue((ulong)value);
 		public void Write(uint value) => WriteValue(value);
 		public void Write(int value) => WriteValue((ulong)value);
-		public void Write(long value) => WriteValue((ulong)value);
 		public void Write(ulong value) => WriteValue(value);
+		public void Write(long value) => WriteValue((ulong)value);
+		public void Write(byte value, int bits) => WriteValue(value, bits);
+		public void Write(ushort value, int bits) => WriteValue(value, bits);
+		public void Write(short value, int bits) => WriteValue((ulong)value, bits);
+		public void Write(uint value, int bits) => WriteValue(value, bits);
+		public void Write(int value, int bits) => WriteValue((ulong)value, bits);
+		public void Write(ulong value, int bits) => WriteValue(value, bits);
+		public void Write(long value, int bits) => WriteValue((ulong)value, bits);
 	}
 }

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 
 namespace SickDev.BinaryCompressor
 {
@@ -31,7 +30,9 @@ namespace SickDev.BinaryCompressor
 		{
 			compressor = new BinaryCompressor();
 			for (int i = 0; i < numbers.Length; i++)
-				compressor.Write(numbers[i]);
+			{
+				compressor.Write(numbers[i], 32);
+			}
 			compressedData = compressor.GetBytes();
 
 			Console.WriteLine(string.Format("---Initial state---\nNumbers: {0}\nBytes: {1}\n\n---Final state---\nBytes: {2}",
@@ -45,7 +46,7 @@ namespace SickDev.BinaryCompressor
 			BinaryDecompressor decompressor = new BinaryDecompressor(compressedData);
 			for (int i = 0; i < result.Length; i++)
 			{
-				BinaryNumber value = decompressor.Read(new BinaryNumber(i).significantBits);
+				BinaryNumber value = decompressor.Read(32);
 				result[i] = (int)value;
 			}
 
