@@ -3,8 +3,8 @@ using System.Text;
 using System.Linq;
 using System.Collections.Generic;
 
-namespace SickDev.BinaryCompressor {
-    public class BinaryCompressor {
+namespace SickDev.BinaryStream {
+    public class BitWriter {
         List<BinaryNumber> numbers = new List<BinaryNumber>();
         int bitsUsed;
 
@@ -15,7 +15,7 @@ namespace SickDev.BinaryCompressor {
             set => numbers[numbers.Count - 1] = value;
         }
 
-        public BinaryCompressor() {
+        public BitWriter() {
             CreateNewNumber();
         }
 

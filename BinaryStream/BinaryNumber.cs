@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Text;
 
-namespace SickDev.BinaryCompressor {
+namespace SickDev.BinaryStream {
     public partial struct BinaryNumber: IConvertible, IComparable<BinaryNumber>, IEquatable<BinaryNumber> {
         public const int maxBits = 64;
         public const int bitsPerByte = 8;

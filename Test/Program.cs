@@ -1,13 +1,12 @@
 ﻿using System;
 
-namespace SickDev.BinaryCompressor
+namespace SickDev.BinaryStream
 {
 	class Program
 	{
-		static int maxNumber = ushort.MaxValue;
+		static int maxNumber = byte.MaxValue;
 		static int[] numbers = new int[maxNumber + 1];
 		static byte[] compressedData;
-		static BinaryCompressor compressor;
 
 		static void Main(string[] args)
 		{
@@ -15,8 +14,9 @@ namespace SickDev.BinaryCompressor
 			for (int i = 0; i < numbers.Length; i++)
 				numbers[i] = i;// random.Next(maxNumber);
 
+			//Peta
 			//numbers = new int[] {
-			//	1
+			//	1, 1
 			//};
 
 			//for (int i = 0; i < numbers.Length; i++)
@@ -28,12 +28,12 @@ namespace SickDev.BinaryCompressor
 
 		static void Compress()
 		{
-			compressor = new BinaryCompressor();
+			BitWriter writter = new BitWriter();
 			for (int i = 0; i < numbers.Length; i++)
 			{
-				compressor.Write(numbers[i], 32);
+				writter.Write(numbers[i], 8);
 			}
-			compressedData = compressor.GetBytes();
+			compressedData = writter.GetBytes();
 
 			Console.WriteLine(string.Format("---Initial state---\nNumbers: {0}\nBytes: {1}\n\n---Final state---\nBytes: {2}",
 				numbers.Length, numbers.Length * sizeof(int), compressedData.Length));
@@ -43,11 +43,11 @@ namespace SickDev.BinaryCompressor
 		static void Decompress()
 		{
 			int[] result = new int[numbers.Length];
-			BinaryDecompressor decompressor = new BinaryDecompressor(compressedData);
+			BitReader reader = new BitReader(compressedData);
 			for (int i = 0; i < result.Length; i++)
 			{
-				BinaryNumber value = decompressor.Read(32);
-				result[i] = (int)value;
+				BinaryNumber value = reader.Read(8);
+				result[i] = value;
 			}
 
 

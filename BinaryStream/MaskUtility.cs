@@ -1,4 +1,4 @@
-﻿namespace SickDev.BinaryCompressor {
+﻿namespace SickDev.BinaryStream {
 	static class MaskUtility{
 		public static BinaryNumber MakeShifted(int position) => 1UL << position;
 

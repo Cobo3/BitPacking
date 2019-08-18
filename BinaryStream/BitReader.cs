@@ -1,7 +1,7 @@
 ﻿using System;
 
-namespace SickDev.BinaryCompressor {
-    public class BinaryDecompressor {
+namespace SickDev.BinaryStream {
+    public class BitReader {
         byte[] data;
         int _position;
         BinaryNumber currentNumber;
@@ -18,7 +18,7 @@ namespace SickDev.BinaryCompressor {
         int bitIndex => position % BinaryNumber.bitsPerByte; //Bit index in byte
         public bool canRead => byteIndex < data.Length;
 
-        public BinaryDecompressor(byte[] data) {
+        public BitReader(byte[] data) {
 			this.data = data;
 			UpdateCurrentNumber();
         }

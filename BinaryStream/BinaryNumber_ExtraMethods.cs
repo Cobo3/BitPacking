@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace SickDev.BinaryCompressor {
+namespace SickDev.BinaryStream {
     public partial struct BinaryNumber : IConvertible, IComparable<BinaryNumber>, IEquatable<BinaryNumber> {
 
         #region GetTypeCode
