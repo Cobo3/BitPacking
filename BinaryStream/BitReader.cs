@@ -1,10 +1,17 @@
 ﻿using System;
+using DebugBinaryNumber =
+#if DEBUG
+	SickDev.BinaryStream.BinaryNumber
+#else
+	System.UInt64
+#endif
+;
 
 namespace SickDev.BinaryStream {
     public class BitReader {
         byte[] data;
         int _position;
-        BinaryNumber currentNumber;
+        DebugBinaryNumber currentNumber;
 
         int position {
             get { return _position; }
@@ -32,8 +39,8 @@ namespace SickDev.BinaryStream {
                 int bitIndexInData = position + i;
                 int byteIndex = bitIndexInData / BinaryNumber.bitsPerByte;
                 int bitIndexInByte = bitIndexInData % BinaryNumber.bitsPerByte;
-                BinaryNumber binaryByte = data[byteIndex];
-                BinaryNumber mask = MaskUtility.MakeShifted(bitIndexInByte);
+				DebugBinaryNumber binaryByte = data[byteIndex];
+				DebugBinaryNumber mask = MaskUtility.MakeShifted(bitIndexInByte);
                 //If it is different than 0, then binaryByte has a "1" bit in that position
                 bool writeBit = (binaryByte & mask) != 0;
                 if (writeBit)
@@ -41,12 +48,12 @@ namespace SickDev.BinaryStream {
             }
         }
 
-        public BinaryNumber Read(int bits) {
+        public ulong Read(int bits) {
             if (!canRead)
                 throw new Exception("There's nothing else to read here");
 
-			BinaryNumber mask = MaskUtility.MakeFilled(bits);
-			BinaryNumber value = currentNumber & mask;
+			DebugBinaryNumber mask = MaskUtility.MakeFilled(bits);
+			DebugBinaryNumber value = currentNumber & mask;
 
             position += bits;
 			return value;

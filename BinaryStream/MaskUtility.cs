@@ -1,10 +1,18 @@
-﻿namespace SickDev.BinaryStream {
-	static class MaskUtility{
-		public static BinaryNumber MakeShifted(int position) => 1UL << position;
+﻿using DebugBinaryNumber =
+#if DEBUG
+	SickDev.BinaryStream.BinaryNumber
+#else
+	System.UInt64
+#endif
+;
 
-		public static BinaryNumber MakeFilled(int amount)
+namespace SickDev.BinaryStream {
+	static class MaskUtility{
+		public static DebugBinaryNumber MakeShifted(int position) => 1UL << position;
+
+		public static DebugBinaryNumber MakeFilled(int amount)
 		{
-			BinaryNumber mask = 0;
+			DebugBinaryNumber mask = 0;
 			for (int i = 0; i < amount; i++)
 				mask |= MakeShifted(i);
 			return mask;

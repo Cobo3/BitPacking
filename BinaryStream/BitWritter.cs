@@ -2,6 +2,13 @@
 using System.Text;
 using System.Linq;
 using System.Collections.Generic;
+using DebugBinaryNumber =
+#if DEBUG
+	SickDev.BinaryStream.BinaryNumber
+#else
+	System.UInt64
+#endif
+;
 
 namespace SickDev.BinaryStream {
     public class BitWriter {
@@ -10,7 +17,7 @@ namespace SickDev.BinaryStream {
 
         int freeBits => BinaryNumber.maxBits - bitsUsed;
 
-        BinaryNumber currentNumber {
+		DebugBinaryNumber currentNumber {
 			get => numbers[numbers.Count - 1];
             set => numbers[numbers.Count - 1] = value;
         }
@@ -26,13 +33,13 @@ namespace SickDev.BinaryStream {
 
 		void WriteValue(BinaryNumber value) => WriteValue(value, value.significantBits);
 
-        void WriteValue(BinaryNumber value, int significantBits) {
+        void WriteValue(DebugBinaryNumber value, int significantBits) {
 			while (significantBits > freeBits) {
                 int leftOverBits = significantBits - freeBits;
-                BinaryNumber mask = MaskUtility.MakeFilled(freeBits);
+				DebugBinaryNumber mask = MaskUtility.MakeFilled(freeBits);
 
                 int bitsToShift = freeBits;
-				BinaryNumber maskedNumber = value & mask;
+				DebugBinaryNumber maskedNumber = value & mask;
                 WriteToCurrentNumber(maskedNumber, freeBits);
 
                 value >>= bitsToShift;
@@ -41,7 +48,7 @@ namespace SickDev.BinaryStream {
             WriteToCurrentNumber(value, significantBits);
         }
 
-        void WriteToCurrentNumber(BinaryNumber value, int significantBits) {
+        void WriteToCurrentNumber(DebugBinaryNumber value, int significantBits) {
             value <<= bitsUsed;
 			currentNumber |= value;
             bitsUsed += significantBits;
@@ -55,7 +62,7 @@ namespace SickDev.BinaryStream {
             byte[][] bytesPerNumber = new byte[numbers.Count][];
 			for (int i = 0; i < bytesPerNumber.Length-1; i++)
 				bytesPerNumber[i] = numbers[i].GetBytes(BinaryNumber.maxBits);
-			bytesPerNumber[bytesPerNumber.Length-1] = currentNumber.GetBytes(bitsUsed);
+			bytesPerNumber[bytesPerNumber.Length-1] = new BinaryNumber(currentNumber).GetBytes(bitsUsed);
 
             byte[] result = new byte[bytesPerNumber.Sum(x => x.Length)];
             int index = 0;
