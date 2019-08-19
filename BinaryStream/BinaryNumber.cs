@@ -3,34 +3,37 @@ using System.Text;
 
 namespace SickDev.BinaryStream {
     public partial struct BinaryNumber: IConvertible, IComparable<BinaryNumber>, IEquatable<BinaryNumber> {
-        public const int maxBits = 64;
         public const int bitsPerByte = 8;
+        public const int maxBits = sizeof(ulong)*bitsPerByte;
 
 		public readonly ulong value;
-        bool[] bits;
+		string stringRepresentation;
 
 		public int significantBits { get; private set; }
 
-        int bitsToShow => Math.Min(maxBits, ((significantBits + bitsPerByte - 1) / bitsPerByte) * bitsPerByte);
-
         public BinaryNumber(IConvertible value) {
             this.value = value.ToUInt64(null);
-            bits = null;
-            significantBits = 0;
-            SetBits();
+			significantBits = default;
+			stringRepresentation = default;
+			significantBits = maxBits - CountLeadingZeros(this.value);
         }
 
-        void SetBits() {
-            bits = new bool[maxBits];
-            for (int i = bits.Length-1; i >= 0; i--) {
-                bits[i] = (value & (1UL << i)) != 0;
-                if(significantBits == 0 && bits[i])
-                    significantBits = i+1;
-            }
+		//Taken from https://stackoverflow.com/questions/31374628/fast-way-of-finding-most-and-least-significant-bit-set-in-a-64-bit-integer
+		public static int CountLeadingZeros(ulong input)
+		{
+			if (input == 0) return 64;
 
-            if(significantBits == 0)
-                significantBits = 1;
-        }
+			ulong n = 1;
+
+			if ((input >> 32) == 0) { n = n + 32; input = input << 32; }
+			if ((input >> 48) == 0) { n = n + 16; input = input << 16; }
+			if ((input >> 56) == 0) { n = n + 8; input = input << 8; }
+			if ((input >> 60) == 0) { n = n + 4; input = input << 4; }
+			if ((input >> 62) == 0) { n = n + 2; input = input << 2; }
+			n = n - (input >> 63);
+
+			return (int)n;
+		}
 
 		public byte[] GetBytes() => GetBytes(significantBits);
 
@@ -45,20 +48,26 @@ namespace SickDev.BinaryStream {
             return bytes;
         }
 
-        public override string ToString() {
-            StringBuilder text = new StringBuilder();
-            int spaces = 0;
-            for (int i = 0; i < bitsToShow; i++){
-                text.Insert(0, bits[i] ? "1" : "0");
-                if (((text.Length - spaces) % bitsPerByte) == 0 && i < bitsToShow-1) {
-                    text.Insert(0, " ");
-                    spaces++;
-                }
-            }
-            if ((bitsToShow % bitsPerByte) > 0)
-                for (int i = 0; i < bitsPerByte - (bitsToShow % bitsPerByte); i++)
-                    text.Insert(0, 0);
-            return text.ToString();
-        }
+		public override string ToString()
+		{
+			if (stringRepresentation == null)
+			{
+				StringBuilder builder = new StringBuilder(Convert.ToString((long)value, 2));
+				int zerosLeft = builder.Length % bitsPerByte;
+				if (zerosLeft > 0)
+					zerosLeft = 8 - zerosLeft;
+
+				for (int i = 0; i < zerosLeft; i++)
+					builder.Insert(0, "0");
+
+				int spaces = builder.Length / bitsPerByte;
+				for (int i = 1; i < spaces; i++)
+					builder.Insert(i * 8 + (i - 1), " ");
+
+				stringRepresentation = builder.ToString();
+			}
+
+			return stringRepresentation;
+		}
     }
 }
