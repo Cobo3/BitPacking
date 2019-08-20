@@ -9,54 +9,41 @@ using DebugBinaryNumber =
 
 namespace SickDev.BinaryStream {
     public class BitReader {
-        byte[] data;
-        int _position;
-        DebugBinaryNumber currentNumber;
+		readonly long length;
+        readonly byte[] data;
+		int position;
 
-        int position {
-            get { return _position; }
-            set {
-                _position = value;
-                UpdateCurrentNumber();
-            }
-        }
-
-        int byteIndex => position / BinaryNumber.bitsPerByte;
-        int bitIndex => position % BinaryNumber.bitsPerByte; //Bit index in byte
-        public bool canRead => byteIndex < data.Length;
+		public long bitsLeft => length - position;
+        public bool canRead => bitsLeft > 0;
 
         public BitReader(byte[] data) {
 			this.data = data;
-			UpdateCurrentNumber();
+			length = data.LongLength * BinaryNumber.bitsPerByte;
         }
 
-        void UpdateCurrentNumber() {
-            int position = byteIndex * BinaryNumber.bitsPerByte + bitIndex;
-            int endPosition = Math.Min(position + BinaryNumber.maxBits, data.Length * BinaryNumber.bitsPerByte);
-            int length = endPosition - position;
-            currentNumber = 0;
-            for (int i = 0; i < length; i++) {
-                int bitIndexInData = position + i;
-                int byteIndex = bitIndexInData / BinaryNumber.bitsPerByte;
-                int bitIndexInByte = bitIndexInData % BinaryNumber.bitsPerByte;
-				DebugBinaryNumber binaryByte = data[byteIndex];
-				DebugBinaryNumber mask = MaskUtility.MakeShifted(bitIndexInByte);
-                //If it is different than 0, then binaryByte has a "1" bit in that position
-                bool writeBit = (binaryByte & mask) != 0;
-                if (writeBit)
-                    currentNumber |= (1UL << i);
-            }
-        }
+        public ulong Read(int bits)
+		{
+			if (position + bits > length)
+				throw new Exception($"Attempting to read {bits} bits, but there's only {bitsLeft} bits left");
 
-        public ulong Read(int bits) {
-            if (!canRead)
-                throw new Exception("There's nothing else to read here");
+			DebugBinaryNumber value = 0;
 
-			DebugBinaryNumber mask = MaskUtility.MakeFilled(bits);
-			DebugBinaryNumber value = currentNumber & mask;
+			int byteIndex = position / BinaryNumber.bitsPerByte;
+			int bitIndex = position % BinaryNumber.bitsPerByte;
 
-            position += bits;
+			for (int i = 0; i < bits; i++)
+			{
+				DebugBinaryNumber @byte = data[byteIndex];
+				DebugBinaryNumber mask = MaskUtility.MakeShifted(bitIndex);
+				DebugBinaryNumber maskResult = @byte & mask;
+				value |= maskResult << (i - bitIndex);
+
+				position++;
+				byteIndex = position / BinaryNumber.bitsPerByte;
+				bitIndex = position % BinaryNumber.bitsPerByte;
+			}
+
 			return value;
-        }
+		}
     }
 }

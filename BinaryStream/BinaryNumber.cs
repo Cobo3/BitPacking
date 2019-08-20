@@ -38,13 +38,19 @@ namespace SickDev.BinaryStream {
 		public byte[] GetBytes() => GetBytes(significantBits);
 
         public byte[] GetBytes(int significantBits) {
-            byte[] bytes = new byte[(int)Math.Ceiling((float)significantBits/bitsPerByte)];
-            for (int i = 0; i < bytes.Length; i++) {
+			int bytesLength = (int)Math.Ceiling((float)significantBits / bitsPerByte);
+			byte[] bytes = new byte[bytesLength];
+            for (int i = 0; i < bytesLength; i++) {
                 int shift = i * 8;
-                BinaryNumber shiftedResult = value >> shift;
+#if DEBUG
+				BinaryNumber shiftedResult = value >> shift;
                 BinaryNumber binaryByte = (byte)shiftedResult.value;
 				bytes[i] = (byte)binaryByte.value;
-            }
+#else
+				ulong shiftedResult = value >> shift;
+				bytes[i] = (byte)shiftedResult;
+#endif
+			}
             return bytes;
         }
 

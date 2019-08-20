@@ -59,15 +59,23 @@ namespace SickDev.BinaryStream {
         }
 
         public byte[] GetBytes() {
-            byte[][] bytesPerNumber = new byte[numbers.Count][];
-			for (int i = 0; i < bytesPerNumber.Length-1; i++)
-				bytesPerNumber[i] = numbers[i].GetBytes(BinaryNumber.maxBits);
-			bytesPerNumber[bytesPerNumber.Length-1] = new BinaryNumber(currentNumber).GetBytes(bitsUsed);
+			int numbersCount = numbers.Count;
+            byte[][] bytesPerNumber = new byte[numbersCount][];
+			ulong totalBytes = 0;
+			for (int i = 0; i < numbersCount - 1; i++)
+			{
+				byte[] bytes = numbers[i].GetBytes(BinaryNumber.maxBits);
+				bytesPerNumber[i] = bytes;
+				totalBytes += (ulong)bytes.Length;
+			}
+			byte[] lastBytes = new BinaryNumber(currentNumber).GetBytes(bitsUsed);
+			bytesPerNumber[numbersCount - 1] = lastBytes;
+			totalBytes += (ulong)lastBytes.Length;
 
-            byte[] result = new byte[bytesPerNumber.Sum(x => x.Length)];
+            byte[] result = new byte[totalBytes];
             int index = 0;
 
-            for (int i = 0; i < bytesPerNumber.Length; i++) {
+            for (int i = 0; i < numbersCount; i++) {
                 for (int j = 0; j < bytesPerNumber[i].Length; j++) {
                     result[index] = bytesPerNumber[i][j];
                     index++;
