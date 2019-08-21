@@ -36,7 +36,13 @@ namespace SickDev.BinaryStream {
 				DebugBinaryNumber @byte = data[byteIndex];
 				DebugBinaryNumber mask = MaskUtility.MakeShifted(bitIndex);
 				DebugBinaryNumber maskResult = @byte & mask;
-				value |= maskResult << (i - bitIndex);
+
+				int bitsToShift = i - bitIndex;
+				if (bitsToShift < 0)
+					maskResult >>= -bitsToShift;
+				else
+					maskResult <<= bitsToShift;
+				value |= maskResult;
 
 				position++;
 				byteIndex = position / BinaryNumber.bitsPerByte;
