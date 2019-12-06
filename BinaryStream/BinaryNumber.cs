@@ -6,7 +6,7 @@ namespace SickDev.BinaryStream
 	public partial struct BinaryNumber : IConvertible, IComparable<BinaryNumber>, IEquatable<BinaryNumber>
 	{
 		public const int bitsPerByte = 8;
-		public const int maxBits = sizeof(ulong) * bitsPerByte;
+		public const int maxBits = 64;
 
 		public readonly ulong value;
 		string stringRepresentation;
@@ -46,7 +46,7 @@ namespace SickDev.BinaryStream
 			int amount = (int)Math.Ceiling((float)significantBits / bitsPerByte);
 			byte[] bytes = new byte[amount];
 
-			//Here we shift packs of 8bits into the right so that we can get that particular byte value
+			//Here we shift packs of 8 bits into the right so that we can get that particular byte value
 			for (int i = 0; i < amount; i++)
 			{
 				int shift = i * bitsPerByte;
