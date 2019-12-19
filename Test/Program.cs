@@ -5,16 +5,17 @@ namespace SickDev.BinaryStream
 {
 	class Program
 	{
-		static int maxNumber = 10000000;
-		static int[] numbers = new int[maxNumber + 1];
+		static int maxNumber = int.MaxValue;
+		static int[] numbers = new int[10000000];
+		static int[] significantBits = new int[numbers.Length];
 		static byte[] compressedData;
 		static Stopwatch stopwatch = new Stopwatch();
 
 		static void Main(string[] args)
 		{
-			Random random = new Random(0);
+			Random random = new Random();
 			for (int i = 0; i < numbers.Length; i++)
-				numbers[i] = random.Next(ushort.MaxValue);
+				numbers[i] = random.Next(maxNumber);
 
 			Compress();
 			Decompress();
@@ -24,11 +25,14 @@ namespace SickDev.BinaryStream
 		{
 			BitWriter writter = new BitWriter();
 			stopwatch.Start();
+
 			for (int i = 0; i < numbers.Length; i++)
 			{
-				writter.Write(numbers[i], 32);
-				//Console.WriteLine("Write: "+((float)i) / numbers.Length);
+				BinaryNumber binaryNumber = (BinaryNumber)numbers[i];
+				significantBits[i] = binaryNumber.significantBits;
+				writter.Write(binaryNumber);
 			}
+
 			Console.WriteLine(stopwatch.Elapsed.ToString());
 			compressedData = writter.GetBytes();
 
@@ -44,30 +48,19 @@ namespace SickDev.BinaryStream
 			BitReader reader = new BitReader(compressedData);
 			stopwatch.Restart();
 			for (int i = 0; i < result.Length; i++)
-				result[i] = (int)reader.Read(32);
-			Console.WriteLine(stopwatch.Elapsed.ToString());
+				result[i] = (int)reader.Read(significantBits[i]);
 
-
-			if (result.Length != numbers.Length)
-			{
-				Console.WriteLine("Wrong!");
-				return;
-			}
-
-			bool wrong = false;
+			bool good = true;
 			for (int i = 0; i < result.Length; i++)
 			{
 				if (result[i] != numbers[i])
 				{
-					wrong = true;
+					good = false;
 					break;
 				}
 			}
 
-			if (wrong)
-				Console.WriteLine("Wrong!");
-			else
-				Console.WriteLine("Good!");
+			Console.WriteLine($"{(good?"Good":"Wrong")}! {stopwatch.Elapsed.ToString()}");
 		}
 	}
 }
