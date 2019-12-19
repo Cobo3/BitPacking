@@ -13,12 +13,13 @@ namespace SickDev.BinaryStream
 	{
 		readonly long length;
 		readonly byte[] data;
-		int position;
-		int byteIndex;
-		int bitIndex;
+		long byteIndex;
+		byte bitIndex;
 
+		long position => byteIndex * BinaryNumber.bitsPerByte + bitIndex;
 		public long bitsLeft => length - position;
 		public bool canRead => bitsLeft > 0;
+
 
 		public BitReader(byte[] data)
 		{
@@ -38,22 +39,27 @@ namespace SickDev.BinaryStream
 			{
 				//...first, get the byte we are currently reading from...
 				DebugBinaryNumber @byte = data[byteIndex];
-				DebugBinaryNumber mask = MaskUtility.MakeShifted(bitIndex);
 				//...and then get the appropiate bit from that byte
+				DebugBinaryNumber mask = MaskUtility.MakeShifted(bitIndex);
 				DebugBinaryNumber bit = @byte & mask;
 
-				//And write that bit into the final value
+				//Put the bit into the correct position be want to write
 				int shiftAmount = i - bitIndex;
 				if (shiftAmount < 0)
 					bit >>= -shiftAmount;
 				else
 					bit <<= shiftAmount;
+
+				//And write that bit into the final value
 				value |= bit;
 
 				//Update the bit and byte we next have to read from
-				position++;
-				byteIndex = position / BinaryNumber.bitsPerByte;
-				bitIndex = position % BinaryNumber.bitsPerByte;
+				bitIndex++;
+				if (bitIndex == 8)
+				{
+					byteIndex++;
+					bitIndex = 0;
+				}
 			}
 
 			return value;
