@@ -24,14 +24,14 @@ namespace SickDev.BinaryStream
 		public static int CountLeadingZeros(ulong input)
 		{
 			if (input == 0)
-				return 64;
+				return 63;
 
 			ulong n = 1;
-			if ((input >> 32) == 0) n += 32; input <<= 32;
-			if ((input >> 48) == 0) n += 16; input <<= 16;
-			if ((input >> 56) == 0) n += 8; input <<= 8;
-			if ((input >> 60) == 0) n += 4; input <<= 4;
-			if ((input >> 62) == 0) n += 2; input <<= 2;
+			if ((input >> 32) == 0) {n += 32; input <<= 32;}
+			if ((input >> 48) == 0) {n += 16; input <<= 16;}
+			if ((input >> 56) == 0) {n += 8; input <<= 8;}
+			if ((input >> 60) == 0) {n += 4; input <<= 4;}
+			if ((input >> 62) == 0) {n += 2; input <<= 2;}
 			n -= (input >> 63);
 
 			return (int)n;
