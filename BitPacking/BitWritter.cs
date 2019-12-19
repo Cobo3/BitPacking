@@ -2,13 +2,13 @@
 using System.Collections.Generic;
 using DebugBinaryNumber =
 #if DEBUG
-	SickDev.BinaryStream.BinaryNumber
+	SickDev.BitPacking.BinaryNumber
 #else
 	System.UInt64
 #endif
 ;
 
-namespace SickDev.BinaryStream
+namespace SickDev.BitPacking
 {
 	public class BitWriter
 	{

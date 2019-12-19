@@ -1,12 +1,12 @@
 ﻿using DebugBinaryNumber =
 #if DEBUG
-	SickDev.BinaryStream.BinaryNumber
+	SickDev.BitPacking.BinaryNumber
 #else
 	System.UInt64
 #endif
 ;
 
-namespace SickDev.BinaryStream {
+namespace SickDev.BitPacking {
 	static class MaskUtility {
 		static DebugBinaryNumber[] filledMasks = new DebugBinaryNumber[BinaryNumber.maxBits];
 

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Text;
 
-namespace SickDev.BinaryStream
+namespace SickDev.BitPacking
 {
 	public partial struct BinaryNumber : IConvertible, IComparable<BinaryNumber>, IEquatable<BinaryNumber>
 	{

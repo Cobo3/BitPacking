@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 
-namespace SickDev.BinaryStream
+namespace SickDev.BitPacking
 {
 	class Program
 	{

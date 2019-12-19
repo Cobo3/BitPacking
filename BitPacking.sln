@@ -1,11 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.27703.2042
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29324.140
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BinaryStream", "BinaryStream\BinaryStream.csproj", "{DAAD79DC-30A3-4A9A-99F8-3AC4AE6D201F}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Test", "Test\Test.csproj", "{74766FA7-0143-4810-B269-B74C9C150DDE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BitPacking", "BitPacking\BitPacking.csproj", "{DAAD79DC-30A3-4A9A-99F8-3AC4AE6D201F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -13,14 +13,14 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{DAAD79DC-30A3-4A9A-99F8-3AC4AE6D201F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{DAAD79DC-30A3-4A9A-99F8-3AC4AE6D201F}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{DAAD79DC-30A3-4A9A-99F8-3AC4AE6D201F}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{DAAD79DC-30A3-4A9A-99F8-3AC4AE6D201F}.Release|Any CPU.Build.0 = Release|Any CPU
 		{74766FA7-0143-4810-B269-B74C9C150DDE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{74766FA7-0143-4810-B269-B74C9C150DDE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{74766FA7-0143-4810-B269-B74C9C150DDE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{74766FA7-0143-4810-B269-B74C9C150DDE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DAAD79DC-30A3-4A9A-99F8-3AC4AE6D201F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DAAD79DC-30A3-4A9A-99F8-3AC4AE6D201F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DAAD79DC-30A3-4A9A-99F8-3AC4AE6D201F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DAAD79DC-30A3-4A9A-99F8-3AC4AE6D201F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
