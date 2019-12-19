@@ -114,6 +114,7 @@ namespace SickDev.BinaryStream
 			return builder.ToString();
 		}
 
+		public void Write(BinaryNumber value) => WriteValue(value);
 		public void Write(byte value) => WriteValue(value);
 		public void Write(ushort value) => WriteValue(value);
 		public void Write(short value) => WriteValue((ulong)value);
