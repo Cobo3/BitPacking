@@ -6,11 +6,14 @@
 #endif
 ;
 
-namespace SickDev.BitPacking {
-	static class MaskUtility {
-		static DebugBinaryNumber[] filledMasks = new DebugBinaryNumber[BinaryNumber.maxBits+1];
+namespace SickDev.BitPacking
+{
+	public static class MaskUtility
+	{
+		static DebugBinaryNumber[] filledMasks = new DebugBinaryNumber[BinaryNumber.maxBits + 1];
 
-		static MaskUtility() {
+		static MaskUtility()
+		{
 			for (int i = 0; i < filledMasks.Length; i++)
 				filledMasks[i] = MakeFilledInternal(i);
 		}
