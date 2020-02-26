@@ -46,6 +46,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BinaryNumberTests.cs" />
+    <Compile Include="BitReaderTests.cs" />
     <Compile Include="BitWritterTests.cs" />
     <Compile Include="MaskUtilityTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

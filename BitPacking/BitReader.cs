@@ -20,8 +20,7 @@ namespace SickDev.BitPacking
 		public long bitsLeft => length - position;
 		public bool canRead => bitsLeft > 0;
 
-
-		public BitReader(byte[] data)
+		public BitReader(params byte[] data)
 		{
 			this.data = data;
 			length = data.LongLength * BinaryNumber.bitsPerByte;
@@ -29,8 +28,8 @@ namespace SickDev.BitPacking
 
 		public ulong Read(int amountOfBits)
 		{
-			if (position + amountOfBits > length)
-				throw new Exception($"Attempting to read {amountOfBits} bits, but there's only {bitsLeft} bits left");
+			if (amountOfBits < 0 || position + amountOfBits > length)
+				throw new ArgumentOutOfRangeException($"Attempting to read {amountOfBits} bits, but there's only {bitsLeft} bits left");
 
 			DebugBinaryNumber value = 0;
 
