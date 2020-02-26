@@ -50,6 +50,8 @@ namespace SickDev.BitPacking
 		//Transforms the first "bits" into an array of bytes
 		public byte[] GetBytes(int bits)
 		{
+			if (bits < 0 || bits > 64)
+				throw new ArgumentOutOfRangeException(nameof(bits), $"Must be 0 < {nameof(bits)} < 64");
 			int length = (int)Math.Ceiling((float)bits / bitsPerByte);
 			byte[] bytes = new byte[length];
 
@@ -79,15 +81,14 @@ namespace SickDev.BitPacking
 			//This very first line would suffice...
 			StringBuilder builder = new StringBuilder(Convert.ToString((long)value, 2));
 
+			//...but I'm interested in making the string multiple of 8...
 			int zerosLeft = builder.Length % bitsPerByte;
 			if (zerosLeft > 0)
 				zerosLeft = bitsPerByte - zerosLeft;
-
-			//...but I'm interested in making the string multiple of 8...
 			for (int i = 0; i < zerosLeft; i++)
 				builder.Insert(0, "0");
 
-			//...and separate the bytes for an easier visualization
+			//...and separating the bytes for an easier visualization
 			int spaces = builder.Length / bitsPerByte;
 			for (int i = 1; i < spaces; i++)
 				builder.Insert(i * bitsPerByte + (i - 1), " ");
