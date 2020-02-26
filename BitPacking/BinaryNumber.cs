@@ -16,9 +16,8 @@ namespace SickDev.BitPacking
 		public const int maxBits = 64;
 
 		public readonly ulong value;
+		public readonly int significantBits;
 		string stringRepresentation;
-
-		public int significantBits { get; private set; }
 
 		public BinaryNumber(IConvertible value)
 		{

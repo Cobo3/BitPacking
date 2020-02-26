@@ -132,5 +132,61 @@ namespace SickDev.BitPacking.Tests
 
 			Assert.That(chunksLengths, Is.All.EqualTo(8));
 		}
+
+		[Test]
+		public void LeftShiftOperator_Works()
+		{
+			BinaryNumber binary = new BinaryNumber(8);
+			binary <<= 2;
+			Assert.AreEqual(binary.value, 32);
+		}
+
+		[Test]
+		public void RightShiftOperator_Works()
+		{
+			BinaryNumber binary = new BinaryNumber(32);
+			binary >>= 2;
+			Assert.AreEqual(binary.value, 8);
+		}
+
+		[Test]
+		public void BitwiseOrOperator_Works()
+		{
+			BinaryNumber binary = new BinaryNumber(32);
+			binary |= 8;
+			Assert.AreEqual(binary.value, 40);
+		}
+
+		[Test]
+		public void BitwiseAndOperator_Works()
+		{
+			BinaryNumber binary = new BinaryNumber(40);
+			binary &= 12;
+			Assert.AreEqual(binary.value, 8);
+		}
+
+		[Test]
+		public void BitwiseExorOperator_Works()
+		{
+			BinaryNumber binary = new BinaryNumber(40);
+			binary ^= 12;
+			Assert.AreEqual(binary.value, 36);
+		}
+
+		[Test]
+		public void EqualOperator_Works()
+		{
+			BinaryNumber binary = new BinaryNumber(40);
+			BinaryNumber binary2 = new BinaryNumber(40);
+			Assert.IsTrue(binary == binary2);
+		}
+
+		[Test]
+		public void NotEqualOperator_Works()
+		{
+			BinaryNumber binary = new BinaryNumber(40);
+			BinaryNumber binary2 = new BinaryNumber(42);
+			Assert.IsTrue(binary != binary2);
+		}
 	}
 }
