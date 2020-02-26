@@ -1,5 +1,12 @@
 ﻿using System;
 using System.Text;
+using DebugBinaryNumber =
+#if DEBUG
+	SickDev.BitPacking.BinaryNumber
+#else
+	System.UInt64
+#endif
+	;
 
 namespace SickDev.BitPacking
 {
@@ -32,7 +39,7 @@ namespace SickDev.BitPacking
 			if ((input >> 56) == 0) {n += 8; input <<= 8;}
 			if ((input >> 60) == 0) {n += 4; input <<= 4;}
 			if ((input >> 62) == 0) {n += 2; input <<= 2;}
-			n -= (input >> 63);
+			n -= input >> 63;
 
 			return (int)n;
 		}
@@ -40,24 +47,20 @@ namespace SickDev.BitPacking
 		//Transforms the whole number into an array of bytes
 		public byte[] GetBytes() => GetBytes(significantBits);
 
-		//Transforms the first "significantBits" into an array of bytes
-		public byte[] GetBytes(int significantBits)
+		//Transforms the first "bits" into an array of bytes
+		public byte[] GetBytes(int bits)
 		{
-			int amount = (int)Math.Ceiling((float)significantBits / bitsPerByte);
-			byte[] bytes = new byte[amount];
+			int length = (int)Math.Ceiling((float)bits / bitsPerByte);
+			byte[] bytes = new byte[length];
 
-			//Here we shift packs of 8 bits into the right so that we can get that particular byte value
-			for (int i = 0; i < amount; i++)
+			//clamp value to the bits we were asked for
+			DebugBinaryNumber clampedValue = value & MaskUtility.MakeFilled(bits);
+
+			//Here we shift packs of 8 bits to the right so that we can get that particular byte value
+			for (int i = 0; i < length; i++)
 			{
-				int shift = i * bitsPerByte;
-#if DEBUG
-				BinaryNumber shiftedResult = value >> shift;
-				BinaryNumber binaryByte = (byte)shiftedResult.value;
-				bytes[i] = (byte)binaryByte.value;
-#else
-				ulong shiftedResult = value >> shift;
-				bytes[i] = (byte)shiftedResult;
-#endif
+				bytes[i] = clampedValue;
+				clampedValue >>= bitsPerByte;
 			}
 
 			return bytes;
