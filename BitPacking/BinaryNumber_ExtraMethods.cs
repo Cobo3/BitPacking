@@ -5,25 +5,40 @@ namespace SickDev.BitPacking
 	public partial struct BinaryNumber : IConvertible, IComparable<BinaryNumber>, IEquatable<BinaryNumber>
 	{
 
-		#region GetTypeCode
+		#region IConvertible
 		public TypeCode GetTypeCode() => value.GetTypeCode();
 
-		public bool ToBoolean(IFormatProvider provider) => ((IConvertible)value).ToBoolean(provider);
-		public char ToChar(IFormatProvider provider) => ((IConvertible)value).ToChar(provider);
-		public sbyte ToSByte(IFormatProvider provider) => ((IConvertible)value).ToSByte(provider);
-		public byte ToByte(IFormatProvider provider) => ((IConvertible)value).ToByte(provider);
-		public short ToInt16(IFormatProvider provider) => ((IConvertible)value).ToInt16(provider);
-		public ushort ToUInt16(IFormatProvider provider) => ((IConvertible)value).ToUInt16(provider);
-		public int ToInt32(IFormatProvider provider) => ((IConvertible)value).ToInt32(provider);
-		public uint ToUInt32(IFormatProvider provider) => ((IConvertible)value).ToUInt32(provider);
-		public long ToInt64(IFormatProvider provider) => ((IConvertible)value).ToInt64(provider);
+		public bool ToBoolean() => ToBoolean(null);
+		public bool ToBoolean(IFormatProvider provider) => Convert.ToBoolean(value);
+		public char ToChar() => ToChar(null);
+		public char ToChar(IFormatProvider provider) => Convert.ToChar(value);
+		public sbyte ToSByte() => ToSByte(null);
+		public sbyte ToSByte(IFormatProvider provider) => Convert.ToSByte(value);
+		public byte ToByte() => ToByte(null);
+		public byte ToByte(IFormatProvider provider) => Convert.ToByte(value);
+		public short ToInt16() => ToInt16(null);
+		public short ToInt16(IFormatProvider provider) => Convert.ToInt16(value);
+		public ushort ToUInt16() => ToUInt16(null);
+		public ushort ToUInt16(IFormatProvider provider) => Convert.ToUInt16(value);
+		public int ToInt32() => ToInt32(null);
+		public int ToInt32(IFormatProvider provider) => Convert.ToInt32(value);
+		public uint ToUInt32() => ToUInt32(null);
+		public uint ToUInt32(IFormatProvider provider) => Convert.ToUInt32(value);
+		public long ToInt64() => ToInt64(null);
+		public long ToInt64(IFormatProvider provider) => Convert.ToInt64(value);
+		public ulong ToUInt64() => value;
 		public ulong ToUInt64(IFormatProvider provider) => value;
-		public float ToSingle(IFormatProvider provider) => ((IConvertible)value).ToSingle(provider);
-		public double ToDouble(IFormatProvider provider) => ((IConvertible)value).ToDouble(provider);
-		public decimal ToDecimal(IFormatProvider provider) => ((IConvertible)value).ToDecimal(provider);
-		public DateTime ToDateTime(IFormatProvider provider) => ((IConvertible)value).ToDateTime(provider);
-		public string ToString(IFormatProvider provider) => value.ToString(provider);
-		public object ToType(Type conversionType, IFormatProvider provider) => ((IConvertible)value).ToType(conversionType, provider);
+		public float ToSingle() => ToSingle(null);
+		public float ToSingle(IFormatProvider provider) => Convert.ToSingle(value);
+		public double ToDouble() => ToDouble(null);
+		public double ToDouble(IFormatProvider provider) => Convert.ToDouble(value);
+		public decimal ToDecimal() => ToDecimal(null);
+		public decimal ToDecimal(IFormatProvider provider) => Convert.ToDecimal(value);
+		public DateTime ToDateTime() => ToDateTime(null);
+		public DateTime ToDateTime(IFormatProvider provider) => Convert.ToDateTime(value);
+		public string ToString(IFormatProvider provider) => ToString();
+		public object ToType(Type conversionType) => ToType(conversionType);
+		public object ToType(Type conversionType, IFormatProvider provider) => Convert.ChangeType(value, conversionType);
 		#endregion
 
 		#region Operators
