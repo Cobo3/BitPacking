@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Text;
+using System.Collections.Generic;
 using DebugBinaryNumber =
 #if DEBUG
 	SickDev.BitPacking.BinaryNumber
@@ -10,19 +11,19 @@ using DebugBinaryNumber =
 
 namespace SickDev.BitPacking
 {
-	public partial struct BinaryNumber : IConvertible, IComparable<BinaryNumber>, IEquatable<BinaryNumber>
+	public readonly partial struct BinaryNumber : IConvertible, IComparable<BinaryNumber>, IEquatable<BinaryNumber>
 	{
 		public const int bitsPerByte = 8;
 		public const int maxBits = 64;
 
+		static Dictionary<ulong, string> stringRepresentations = new Dictionary<ulong, string>();
+
 		public readonly ulong value;
 		public readonly int significantBits;
-		string stringRepresentation;
 
 		public BinaryNumber(IConvertible value)
 		{
 			this.value = value.ToUInt64(null);
-			stringRepresentation = default;
 			significantBits = maxBits - CountLeadingZeros(this.value);
 		}
 
@@ -69,13 +70,15 @@ namespace SickDev.BitPacking
 
 		public override string ToString()
 		{
-			if (stringRepresentation == null)
-				stringRepresentation = CreateStringRepresentation();
-
-			return stringRepresentation;
+			if (!stringRepresentations.TryGetValue(value, out string toString))
+			{
+				toString = CreateStringRepresentation(value);
+				stringRepresentations.Add(value, toString);
+			}
+			return toString;
 		}
 
-		string CreateStringRepresentation()
+		static string CreateStringRepresentation(ulong value)
 		{
 			//This very first line would suffice...
 			StringBuilder builder = new StringBuilder(Convert.ToString((long)value, 2));
@@ -83,14 +86,16 @@ namespace SickDev.BitPacking
 			//...but I'm interested in making the string multiple of 8...
 			int zerosLeft = builder.Length % bitsPerByte;
 			if (zerosLeft > 0)
+			{
 				zerosLeft = bitsPerByte - zerosLeft;
-			for (int i = 0; i < zerosLeft; i++)
-				builder.Insert(0, "0");
+				for (int i = 0; i < zerosLeft; i++)
+					builder.Insert(0, "0");
+			}
 
 			//...and separating the bytes for an easier visualization
 			int spaces = builder.Length / bitsPerByte;
 			for (int i = 1; i < spaces; i++)
-				builder.Insert(i * bitsPerByte + (i - 1), " ");
+				builder.Insert(i * bitsPerByte + i - 1, " ");
 
 			return builder.ToString();
 		}

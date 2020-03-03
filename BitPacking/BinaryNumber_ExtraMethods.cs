@@ -2,7 +2,7 @@
 
 namespace SickDev.BitPacking
 {
-	public partial struct BinaryNumber : IConvertible, IComparable<BinaryNumber>, IEquatable<BinaryNumber>
+	public readonly partial struct BinaryNumber : IConvertible, IComparable<BinaryNumber>, IEquatable<BinaryNumber>
 	{
 
 		#region IConvertible
