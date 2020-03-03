@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.29324.140
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Test", "Test\Test.csproj", "{74766FA7-0143-4810-B269-B74C9C150DDE}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bitpacking.Tests", "BitPacking.Tests\Bitpacking.Tests.csproj", "{74766FA7-0143-4810-B269-B74C9C150DDE}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BitPacking", "BitPacking\BitPacking.csproj", "{DAAD79DC-30A3-4A9A-99F8-3AC4AE6D201F}"
 EndProject
