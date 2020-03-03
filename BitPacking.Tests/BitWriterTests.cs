@@ -4,10 +4,10 @@ using NUnit.Framework;
 namespace SickDev.BitPacking.Tests
 {
 	[TestFixture]
-	class BitWritterTests
+	class BitWriterTests
 	{
 		[Test]
-		public void GetBytes_Returns_Empty_When_NewWritter()
+		public void GetBytes_Returns_Empty_When_NewWriter()
 		{
 			Assert.IsEmpty(new BitWriter().GetBytes());
 		}
@@ -17,7 +17,7 @@ namespace SickDev.BitPacking.Tests
 		{
 			/* There are 12 entries, 
 			 * and we will Write them together in groups of 4.
-			 * In total, 96 bits, forcing the Writter to make 2 BinaryNumber
+			 * In total, 96 bits, forcing the Writer to make 2 BinaryNumber
 			 * The bytes from GetBytes should match perfectly with these
 			 */
 			byte[] input = new byte[] 
@@ -27,10 +27,10 @@ namespace SickDev.BitPacking.Tests
 				188, 200, 10, 32
 			};
 
-			BitWriter writter = new BitWriter();
+			BitWriter writer = new BitWriter();
 			for (int i = 0; i < input.Length; i += 4)
-				writter.Write(BitConverter.ToUInt32(input, i));
-			Assert.AreEqual(input, writter.GetBytes());
+				writer.Write(BitConverter.ToUInt32(input, i));
+			Assert.AreEqual(input, writer.GetBytes());
 		}
 
 		[Test]
@@ -41,9 +41,9 @@ namespace SickDev.BitPacking.Tests
 			 * 10 10101001‬ is 681
 			 * which is 2 169
 			 */
-			BitWriter writter = new BitWriter();
-			writter.Write(1705, 10);
-			Assert.AreEqual(new byte[] { 169, 2 }, writter.GetBytes());
+			BitWriter writer = new BitWriter();
+			writer.Write(1705, 10);
+			Assert.AreEqual(new byte[] { 169, 2 }, writer.GetBytes());
 		}
 	}
 }

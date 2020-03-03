@@ -41,7 +41,7 @@
   <ItemGroup>
     <Compile Include="BitReader.cs" />
     <Compile Include="BinaryNumber_ExtraMethods.cs" />
-    <Compile Include="BitWritter.cs" />
+    <Compile Include="BitWriter.cs" />
     <Compile Include="BinaryNumber.cs" />
     <Compile Include="MaskUtility.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
