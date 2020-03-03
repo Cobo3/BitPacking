@@ -26,15 +26,15 @@ namespace SickDev.BitPacking
 			length = data.LongLength * BinaryNumber.bitsPerByte;
 		}
 
-		public ulong Read(int amountOfBits)
+		public ulong Read(int bits)
 		{
-			if (amountOfBits < 0 || position + amountOfBits > length)
-				throw new ArgumentOutOfRangeException($"Attempting to read {amountOfBits} bits, but there's only {bitsLeft} bits left");
+			if (bits < 0 || position + bits > length)
+				throw new ArgumentOutOfRangeException($"Attempting to read {bits} bits, but there's only {bitsLeft} bits left");
 
 			DebugBinaryNumber value = 0;
 
 			//For every bit we want to read...
-			for (int i = 0; i < amountOfBits; i++)
+			for (int i = 0; i < bits; i++)
 			{
 				//...first, get the byte we are currently reading from...
 				DebugBinaryNumber @byte = data[byteIndex];

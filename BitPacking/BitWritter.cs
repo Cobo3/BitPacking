@@ -34,12 +34,12 @@ namespace SickDev.BitPacking
 		void WriteValue(BinaryNumber value) => WriteValue(value, value.significantBits);
 
 		//Write only the specified number of bits of the specified value
-		void WriteValue(DebugBinaryNumber value, int significantBits)
+		void WriteValue(DebugBinaryNumber value, int bits)
 		{
 			//If we don't have enough space to write the whole value...
-			if (significantBits > freeBits)
+			if (bits > freeBits)
 			{
-				significantBits -= freeBits;
+				bits -= freeBits;
 				DebugBinaryNumber mask = MaskUtility.MakeFilled(freeBits);
 
 				//...write only the first bits of the value...
@@ -51,16 +51,16 @@ namespace SickDev.BitPacking
 				value >>= bitsToShift;
 			}
 
-			WriteToCurrentNumber(value, significantBits);
+			WriteToCurrentNumber(value, bits);
 		}
 
-		void WriteToCurrentNumber(DebugBinaryNumber value, int significantBits)
+		void WriteToCurrentNumber(DebugBinaryNumber value, int bits)
 		{
 			//Write the value at the end of the currentNumber
 			value <<= bitsUsed;
 			currentNumber |= value;
 
-			bitsUsed += significantBits;
+			bitsUsed += bits;
 
 			if (freeBits == 0)
 				CreateNewNumber();
