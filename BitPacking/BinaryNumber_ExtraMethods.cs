@@ -34,7 +34,11 @@ namespace SickDev.BitPacking
 		public static BinaryNumber operator ^(BinaryNumber binary, IConvertible number) => binary.value ^ number.ToUInt64(null);
 
 		public static bool operator ==(BinaryNumber binary, IConvertible number) => binary.value == number.ToUInt64(null);
-		public static bool operator !=(BinaryNumber binary, IConvertible number) => !(binary == number);
+		public static bool operator !=(BinaryNumber binary, IConvertible number) => binary.value != number.ToUInt64(null);
+		public static bool operator >(BinaryNumber binary, IConvertible number) => binary.value > number.ToUInt64(null);
+		public static bool operator <(BinaryNumber binary, IConvertible number) => binary.value < number.ToUInt64(null);
+		public static bool operator >=(BinaryNumber binary, IConvertible number) => binary.value >= number.ToUInt64(null);
+		public static bool operator <=(BinaryNumber binary, IConvertible number) => binary.value <= number.ToUInt64(null);
 
 		public static implicit operator BinaryNumber(sbyte number) => new BinaryNumber(number);
 		public static implicit operator BinaryNumber(byte number) => new BinaryNumber(number);
