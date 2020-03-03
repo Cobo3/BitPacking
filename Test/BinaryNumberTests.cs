@@ -188,5 +188,37 @@ namespace SickDev.BitPacking.Tests
 			BinaryNumber binary2 = new BinaryNumber(42);
 			Assert.IsTrue(binary != binary2);
 		}
+
+		[Test]
+		public void GreaterThanOperator_Works()
+		{
+			BinaryNumber binary = new BinaryNumber(40);
+			BinaryNumber binary2 = new BinaryNumber(42);
+			Assert.IsTrue(binary2 > binary);
+		}
+
+		[Test]
+		public void GreaterThanOrEqualOperator_Works()
+		{
+			BinaryNumber binary = new BinaryNumber(40);
+			BinaryNumber binary2 = new BinaryNumber(42);
+			Assert.IsTrue(binary2 >= binary);
+		}
+
+		[Test]
+		public void LessThanOperator_Works()
+		{
+			BinaryNumber binary = new BinaryNumber(40);
+			BinaryNumber binary2 = new BinaryNumber(42);
+			Assert.IsTrue(binary < binary2);
+		}
+
+		[Test]
+		public void LessThanOrEqualOperator_Works()
+		{
+			BinaryNumber binary = new BinaryNumber(40);
+			BinaryNumber binary2 = new BinaryNumber(42);
+			Assert.IsTrue(binary <= binary2);
+		}
 	}
 }
