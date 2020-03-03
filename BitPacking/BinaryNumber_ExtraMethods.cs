@@ -42,18 +42,18 @@ namespace SickDev.BitPacking
 		#endregion
 
 		#region Operators
-		public static BinaryNumber operator <<(BinaryNumber binary, int bits) => binary.value << bits;
-		public static BinaryNumber operator >>(BinaryNumber binary, int bits) => binary.value >> bits;
-		public static BinaryNumber operator |(BinaryNumber binary, IConvertible number) => binary.value | number.ToUInt64(null);
-		public static BinaryNumber operator &(BinaryNumber binary, IConvertible number) => binary.value & number.ToUInt64(null);
-		public static BinaryNumber operator ^(BinaryNumber binary, IConvertible number) => binary.value ^ number.ToUInt64(null);
+		public static BinaryNumber operator <<(in BinaryNumber binary, int bits) => binary.value << bits;
+		public static BinaryNumber operator >>(in BinaryNumber binary, int bits) => binary.value >> bits;
+		public static BinaryNumber operator |(in BinaryNumber binary, IConvertible number) => binary.value | number.ToUInt64(null);
+		public static BinaryNumber operator &(in BinaryNumber binary, IConvertible number) => binary.value & number.ToUInt64(null);
+		public static BinaryNumber operator ^(in BinaryNumber binary, IConvertible number) => binary.value ^ number.ToUInt64(null);
 
-		public static bool operator ==(BinaryNumber binary, IConvertible number) => binary.value == number.ToUInt64(null);
-		public static bool operator !=(BinaryNumber binary, IConvertible number) => binary.value != number.ToUInt64(null);
-		public static bool operator >(BinaryNumber binary, IConvertible number) => binary.value > number.ToUInt64(null);
-		public static bool operator <(BinaryNumber binary, IConvertible number) => binary.value < number.ToUInt64(null);
-		public static bool operator >=(BinaryNumber binary, IConvertible number) => binary.value >= number.ToUInt64(null);
-		public static bool operator <=(BinaryNumber binary, IConvertible number) => binary.value <= number.ToUInt64(null);
+		public static bool operator ==(in BinaryNumber binary, IConvertible number) => binary.value == number.ToUInt64(null);
+		public static bool operator !=(in BinaryNumber binary, IConvertible number) => binary.value != number.ToUInt64(null);
+		public static bool operator >(in BinaryNumber binary, IConvertible number) => binary.value > number.ToUInt64(null);
+		public static bool operator <(in BinaryNumber binary, IConvertible number) => binary.value < number.ToUInt64(null);
+		public static bool operator >=(in BinaryNumber binary, IConvertible number) => binary.value >= number.ToUInt64(null);
+		public static bool operator <=(in BinaryNumber binary, IConvertible number) => binary.value <= number.ToUInt64(null);
 
 		public static implicit operator BinaryNumber(sbyte number) => new BinaryNumber(number);
 		public static implicit operator BinaryNumber(byte number) => new BinaryNumber(number);
@@ -64,14 +64,14 @@ namespace SickDev.BitPacking
 		public static implicit operator BinaryNumber(ulong number) => new BinaryNumber(number);
 		public static implicit operator BinaryNumber(long number) => new BinaryNumber(number);
 
-		public static implicit operator sbyte(BinaryNumber number) => (sbyte)number.value;
-		public static implicit operator byte(BinaryNumber number) => (byte)number.value;
-		public static implicit operator ushort(BinaryNumber number) => (ushort)number.value;
-		public static implicit operator short(BinaryNumber number) => (short)number.value;
-		public static implicit operator uint(BinaryNumber number) => (uint)number.value;
-		public static implicit operator int(BinaryNumber number) => (int)number.value;
-		public static implicit operator ulong(BinaryNumber number) => number.value;
-		public static implicit operator long(BinaryNumber number) => (long)number.value;
+		public static implicit operator sbyte(in BinaryNumber number) => (sbyte)number.value;
+		public static implicit operator byte(in BinaryNumber number) => (byte)number.value;
+		public static implicit operator ushort(in BinaryNumber number) => (ushort)number.value;
+		public static implicit operator short(in BinaryNumber number) => (short)number.value;
+		public static implicit operator uint(in BinaryNumber number) => (uint)number.value;
+		public static implicit operator int(in BinaryNumber number) => (int)number.value;
+		public static implicit operator ulong(in BinaryNumber number) => number.value;
+		public static implicit operator long(in BinaryNumber number) => (long)number.value;
 		#endregion
 
 		public int CompareTo(BinaryNumber other) => value.CompareTo(other.value);
