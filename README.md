@@ -19,12 +19,12 @@ using SickDev.BitPacking;
 //The data we want to serialize
 byte[] ages = new byte[100];
 for (int i = 0; i < ages.Length; i++)
-	ages[i] = (byte) random.Next(0, 101);
+    ages[i] = (byte) random.Next(0, 101);
 
 //Pack the data, specifying that only the first 7 bits matter
 BitWriter writer = new BitWriter();
 for (int i = 0; i < ages.Length; i++)
-	writer.Write(ages[i], 7);
+    writer.Write(ages[i], 7);
 ```
 
 Once all the data is written, we can get the compressed version.
@@ -34,7 +34,7 @@ byte[] compressedAges = writer.GetBytes();
 
 //Non compressed data size: 100, compressed data size: 88
 Console.WriteLine($"Non compressed data size: {ages.Length}, " +
-	$"compressed data size: {compressedAges.Length}");
+    $"compressed data size: {compressedAges.Length}");
 ```
 
 On the other hand, we use *BitReader* to read from the compressed data.
@@ -44,7 +44,7 @@ byte[] uncompressedData = new byte[100];
 //Unpack the data, reading only 7 bits at a time
 BitReader reader = new BitReader(compressedAges);
 for (int i = 0; i < uncompressedData.Length; i++)
-	uncompressedData[i] = reader.Read(7);
+    uncompressedData[i] = reader.Read(7);
 
 //Test passed!
 Assert.AreEqual(ages, uncompressedData);
@@ -57,15 +57,15 @@ Negative numebrs are not currently supported. However, it is fairly simple to wo
 //The data we want to serialize
 int[] data = new int[10];
 for (int i = 0; i < data.Length; i++)
-	data[i] = random.Next(-1024, 1025);
+    data[i] = random.Next(-1024, 1025);
 
 BitWriter writer = new BitWriter();
 for (int i = 0; i < data.Length; i++)
 {
-	//When packing, write the absolute value of the data
-	writer.Write(Math.Abs(data[i]), 10);
-	//After that, write 1 bit indicating the sign of the data
-	writer.Write(data[i] < 0 ? 0 : 1, 1);
+    //When packing, write the absolute value of the data
+    writer.Write(Math.Abs(data[i]), 10);
+    //After that, write 1 bit indicating the sign of the data
+    writer.Write(data[i] < 0 ? 0 : 1, 1);
 }
 
 byte[] compressedData = writer.GetBytes();
@@ -75,10 +75,10 @@ int[] uncompressedData = new int[10];
 BitReader reader = new BitReader(compressedData);
 for (int i = 0; i < uncompressedData.Length; i++)
 {
-	uncompressedData[i] = reader.Read(10);
-	//When unpacking, if the next bit is a 0, multiply by -1
-	if (reader.Read(1) == 0)
-		uncompressedData[i] *= -1;
+    uncompressedData[i] = reader.Read(10);
+    //When unpacking, if the next bit is a 0, multiply by -1
+    if (reader.Read(1) == 0)
+        uncompressedData[i] *= -1;
 }
 
 //Test passed!
