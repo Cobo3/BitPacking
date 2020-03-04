@@ -12,7 +12,7 @@ namespace SickDev.BitPacking
 {
 	public class BitWriter
 	{
-		List<BinaryNumber> numbers = new List<BinaryNumber>();
+		List<DebugBinaryNumber> numbers = new List<DebugBinaryNumber>();
 		int bitsUsed;
 
 		int freeBits => BinaryNumber.maxBits - bitsUsed;
@@ -75,7 +75,7 @@ namespace SickDev.BitPacking
 			//For every number FULLY written, get its bytes
 			for (int i = 0; i < numbersCount - 1; i++)
 			{
-				byte[] bytes = numbers[i].GetBytes(BinaryNumber.maxBits);
+				byte[] bytes = System.BitConverter.GetBytes(numbers[i].value);
 				bytesPerNumber[i] = bytes;
 				totalBytes += (ulong)bytes.Length;
 			}

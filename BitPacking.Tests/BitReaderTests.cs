@@ -43,7 +43,7 @@ namespace SickDev.BitPacking.Tests
 				0b00000010,
 				0b00000011
 			);
-			Assert.AreEqual(513, reader.Read(10));
+			Assert.AreEqual(513, (ulong)reader.Read(10));
 		}
 	}
 }
