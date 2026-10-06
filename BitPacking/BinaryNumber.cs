@@ -51,7 +51,7 @@ namespace SickDev.BitPacking
 		public byte[] GetBytes(int bits)
 		{
 			if (bits < 0 || bits > 64)
-				throw new ArgumentOutOfRangeException(nameof(bits), $"Must be 0 < {nameof(bits)} < 64");
+				throw new ArgumentOutOfRangeException(nameof(bits), $"Must be 0 <= {nameof(bits)} <= {maxBits}");
 			int length = (int)Math.Ceiling((float)bits / bitsPerByte);
 			byte[] bytes = new byte[length];
 

@@ -28,8 +28,10 @@ namespace SickDev.BitPacking
 
 		public DebugBinaryNumber Read(int bits)
 		{
-			if (bits < 0 || position + bits > length)
-				throw new ArgumentOutOfRangeException($"Attempting to read {bits} bits, but there's only {bitsLeft} bits left");
+			if (bits < 0 || bits > BinaryNumber.maxBits)
+				throw new ArgumentOutOfRangeException(nameof(bits), $"Must be 0 <= {nameof(bits)} <= {BinaryNumber.maxBits}");
+			if (position + bits > length)
+				throw new ArgumentOutOfRangeException(nameof(bits), $"Attempting to read {bits} bits, but there's only {bitsLeft} bits left");
 
 			DebugBinaryNumber value = 0;
 
