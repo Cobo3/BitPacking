@@ -61,6 +61,22 @@ namespace SickDev.BitPacking.Tests
 			Assert.DoesNotThrow(() => new BinaryNumber(-1));
 		}
 
+		[Test]
+		public void NegativeNumbers_Are_TwosComplement()
+		{
+			BinaryNumber binary = -1;
+			Assert.AreEqual(ulong.MaxValue, binary.value);
+			Assert.AreEqual(64, binary.significantBits);
+		}
+
+		[Test]
+		public void BitwiseOrOperator_Works_With_NegativeNumber()
+		{
+			BinaryNumber binary = new BinaryNumber(0);
+			binary |= -1;
+			Assert.AreEqual(ulong.MaxValue, binary.value);
+		}
+
 		[Test, Sequential]
 		public void GetBytes_Returns_1ByteForEvery8Bits([Values(1, 9, 25, 57)] int significantBits, [Values(1, 2, 4, 8)] int numberOfBytes)
 		{
