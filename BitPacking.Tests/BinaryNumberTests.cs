@@ -134,6 +134,13 @@ namespace SickDev.BitPacking.Tests
 		}
 
 		[Test]
+		public void ToType_Works()
+		{
+			BinaryNumber binary = 42;
+			Assert.AreEqual(42, binary.ToType(typeof(int)));
+		}
+
+		[Test]
 		public void LeftShiftOperator_Works()
 		{
 			BinaryNumber binary = new BinaryNumber(8);

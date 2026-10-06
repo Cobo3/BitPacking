@@ -37,7 +37,7 @@ namespace SickDev.BitPacking
 		public DateTime ToDateTime() => ToDateTime(null);
 		public DateTime ToDateTime(IFormatProvider provider) => Convert.ToDateTime(value);
 		public string ToString(IFormatProvider provider) => ToString();
-		public object ToType(Type conversionType) => ToType(conversionType);
+		public object ToType(Type conversionType) => ToType(conversionType, null);
 		public object ToType(Type conversionType, IFormatProvider provider) => Convert.ChangeType(value, conversionType);
 		#endregion
 
