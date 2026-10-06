@@ -21,6 +21,12 @@ namespace SickDev.BitPacking.Tests
 		}
 
 		[Test]
+		public void CountLeadingZeros_Is_64_For_Zero()
+		{
+			Assert.AreEqual(64, BinaryNumber.CountLeadingZeros(0));
+		}
+
+		[Test]
 		public void SignificantBits_Is_1_For_One()
 		{
 			BinaryNumber binary = 1;
