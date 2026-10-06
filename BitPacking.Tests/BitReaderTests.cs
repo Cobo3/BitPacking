@@ -45,5 +45,24 @@ namespace SickDev.BitPacking.Tests
 			);
 			Assert.AreEqual(513, (ulong)reader.Read(10));
 		}
+
+		[Test]
+		public void Read_Throws_When_MoreThan64Bits()
+		{
+			BitReader reader = new BitReader(new byte[9]);
+			Assert.That(() => reader.Read(65), Throws.InstanceOf<ArgumentOutOfRangeException>().With.Property("ParamName").EqualTo("bits"));
+		}
+
+		[Test]
+		public void Read_Returns_WhatWasWritten()
+		{
+			BitWriter writer = new BitWriter();
+			for (int i = 0; i < 100; i++)
+				writer.Write(i, 7);
+
+			BitReader reader = new BitReader(writer.GetBytes());
+			for (int i = 0; i < 100; i++)
+				Assert.AreEqual(i, (int)reader.Read(7));
+		}
 	}
 }

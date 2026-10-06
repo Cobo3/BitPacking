@@ -37,23 +37,23 @@ namespace SickDev.BitPacking
 		public DateTime ToDateTime() => ToDateTime(null);
 		public DateTime ToDateTime(IFormatProvider provider) => Convert.ToDateTime(value);
 		public string ToString(IFormatProvider provider) => ToString();
-		public object ToType(Type conversionType) => ToType(conversionType);
+		public object ToType(Type conversionType) => ToType(conversionType, null);
 		public object ToType(Type conversionType, IFormatProvider provider) => Convert.ChangeType(value, conversionType);
 		#endregion
 
 		#region Operators
 		public static BinaryNumber operator <<(in BinaryNumber binary, int bits) => binary.value << bits;
 		public static BinaryNumber operator >>(in BinaryNumber binary, int bits) => binary.value >> bits;
-		public static BinaryNumber operator |(in BinaryNumber binary, IConvertible number) => binary.value | number.ToUInt64(null);
-		public static BinaryNumber operator &(in BinaryNumber binary, IConvertible number) => binary.value & number.ToUInt64(null);
-		public static BinaryNumber operator ^(in BinaryNumber binary, IConvertible number) => binary.value ^ number.ToUInt64(null);
+		public static BinaryNumber operator |(in BinaryNumber binary, IConvertible number) => binary.value | ToUInt64(number);
+		public static BinaryNumber operator &(in BinaryNumber binary, IConvertible number) => binary.value & ToUInt64(number);
+		public static BinaryNumber operator ^(in BinaryNumber binary, IConvertible number) => binary.value ^ ToUInt64(number);
 
-		public static bool operator ==(in BinaryNumber binary, IConvertible number) => binary.value == number.ToUInt64(null);
-		public static bool operator !=(in BinaryNumber binary, IConvertible number) => binary.value != number.ToUInt64(null);
-		public static bool operator >(in BinaryNumber binary, IConvertible number) => binary.value > number.ToUInt64(null);
-		public static bool operator <(in BinaryNumber binary, IConvertible number) => binary.value < number.ToUInt64(null);
-		public static bool operator >=(in BinaryNumber binary, IConvertible number) => binary.value >= number.ToUInt64(null);
-		public static bool operator <=(in BinaryNumber binary, IConvertible number) => binary.value <= number.ToUInt64(null);
+		public static bool operator ==(in BinaryNumber binary, IConvertible number) => binary.value == ToUInt64(number);
+		public static bool operator !=(in BinaryNumber binary, IConvertible number) => binary.value != ToUInt64(number);
+		public static bool operator >(in BinaryNumber binary, IConvertible number) => binary.value > ToUInt64(number);
+		public static bool operator <(in BinaryNumber binary, IConvertible number) => binary.value < ToUInt64(number);
+		public static bool operator >=(in BinaryNumber binary, IConvertible number) => binary.value >= ToUInt64(number);
+		public static bool operator <=(in BinaryNumber binary, IConvertible number) => binary.value <= ToUInt64(number);
 
 		public static implicit operator BinaryNumber(sbyte number) => new BinaryNumber(number);
 		public static implicit operator BinaryNumber(byte number) => new BinaryNumber(number);
@@ -76,7 +76,7 @@ namespace SickDev.BitPacking
 
 		public int CompareTo(BinaryNumber other) => value.CompareTo(other.value);
 		public bool Equals(BinaryNumber other) => value.Equals(other.value);
-		public override bool Equals(object obj) => value.Equals(obj);
+		public override bool Equals(object obj) => obj is BinaryNumber other && Equals(other);
 		public override int GetHashCode() => value.GetHashCode();
 	}
 }

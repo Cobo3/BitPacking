@@ -220,5 +220,42 @@ namespace SickDev.BitPacking.Tests
 			BinaryNumber binary2 = new BinaryNumber(42);
 			Assert.IsTrue(binary <= binary2);
 		}
+
+		[Test]
+		public void CountLeadingZeros_Is_64_For_Zero()
+		{
+			Assert.AreEqual(64, BinaryNumber.CountLeadingZeros(0));
+		}
+
+		[Test]
+		public void NegativeNumbers_Are_TwosComplement()
+		{
+			BinaryNumber binary = -1;
+			Assert.AreEqual(ulong.MaxValue, binary.value);
+			Assert.AreEqual(64, binary.significantBits);
+		}
+
+		[Test]
+		public void BitwiseOrOperator_Works_With_NegativeNumber()
+		{
+			BinaryNumber binary = new BinaryNumber(0);
+			binary |= -1;
+			Assert.AreEqual(ulong.MaxValue, binary.value);
+		}
+
+		[Test]
+		public void ToType_Works()
+		{
+			BinaryNumber binary = 42;
+			Assert.AreEqual(42, binary.ToType(typeof(int)));
+		}
+
+		[Test]
+		public void Equals_Works_With_BoxedBinaryNumber()
+		{
+			BinaryNumber binary = 42;
+			object binary2 = new BinaryNumber(42);
+			Assert.IsTrue(binary.Equals(binary2));
+		}
 	}
 }

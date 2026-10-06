@@ -23,15 +23,30 @@ namespace SickDev.BitPacking
 
 		public BinaryNumber(IConvertible value)
 		{
-			this.value = value.ToUInt64(null);
-			significantBits = maxBits - CountLeadingZeros(this.value);
+			this.value = ToUInt64(value);
+			significantBits = Math.Max(1, maxBits - CountLeadingZeros(this.value));
+		}
+
+		//Signed numbers are converted using their two's complement representation instead of throwing
+		static ulong ToUInt64(IConvertible value)
+		{
+			switch (value.GetTypeCode())
+			{
+				case TypeCode.SByte:
+				case TypeCode.Int16:
+				case TypeCode.Int32:
+				case TypeCode.Int64:
+					return unchecked((ulong)value.ToInt64(null));
+				default:
+					return value.ToUInt64(null);
+			}
 		}
 
 		//Taken from https://stackoverflow.com/questions/31374628/fast-way-of-finding-most-and-least-significant-bit-set-in-a-64-bit-integer
 		public static int CountLeadingZeros(ulong input)
 		{
 			if (input == 0)
-				return 63;
+				return maxBits;
 
 			ulong n = 1;
 			if ((input >> 32) == 0) {n += 32; input <<= 32;}
@@ -51,7 +66,7 @@ namespace SickDev.BitPacking
 		public byte[] GetBytes(int bits)
 		{
 			if (bits < 0 || bits > 64)
-				throw new ArgumentOutOfRangeException(nameof(bits), $"Must be 0 < {nameof(bits)} < 64");
+				throw new ArgumentOutOfRangeException(nameof(bits), $"Must be 0 <= {nameof(bits)} <= {maxBits}");
 			int length = (int)Math.Ceiling((float)bits / bitsPerByte);
 			byte[] bytes = new byte[length];
 
@@ -61,7 +76,7 @@ namespace SickDev.BitPacking
 			//Here we shift packs of 8 bits to the right so that we can get that particular byte value
 			for (int i = 0; i < length; i++)
 			{
-				bytes[i] = clampedValue;
+				bytes[i] = (byte)clampedValue;
 				clampedValue >>= bitsPerByte;
 			}
 

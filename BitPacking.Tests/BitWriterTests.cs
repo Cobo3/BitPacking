@@ -45,5 +45,34 @@ namespace SickDev.BitPacking.Tests
 			writer.Write(1705, 10);
 			Assert.AreEqual(new byte[] { 169, 2 }, writer.GetBytes());
 		}
+
+		[Test]
+		public void Write_WithBits_Ignores_HigherBits()
+		{
+			/* 255 written with 4 bits is 1111.
+			 * Writing 0 with 4 bits next must not be affected by the upper bits of 255
+			 */
+			BitWriter writer = new BitWriter();
+			writer.Write(255, 4);
+			writer.Write(0, 4);
+			Assert.AreEqual(new byte[] { 0b00001111 }, writer.GetBytes());
+		}
+
+		[Test]
+		public void Write_WithBits_Ignores_HigherBits_When_MoreThan64Bits()
+		{
+			BitWriter writer = new BitWriter();
+			writer.Write(0UL, 60);
+			writer.Write(ulong.MaxValue, 8);
+			writer.Write(0, 4);
+			Assert.AreEqual(new byte[] { 0, 0, 0, 0, 0, 0, 0, 0xF0, 0x0F }, writer.GetBytes());
+		}
+
+		[Test]
+		public void Write_Throws_With_InvalidBits([Values(-1, 65)] int bits)
+		{
+			BitWriter writer = new BitWriter();
+			Assert.That(() => writer.Write(1, bits), Throws.InstanceOf<ArgumentOutOfRangeException>());
+		}
 	}
 }
