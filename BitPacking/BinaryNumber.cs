@@ -23,8 +23,23 @@ namespace SickDev.BitPacking
 
 		public BinaryNumber(IConvertible value)
 		{
-			this.value = value.ToUInt64(null);
+			this.value = ToUInt64(value);
 			significantBits = maxBits - CountLeadingZeros(this.value);
+		}
+
+		//Signed numbers are converted using their two's complement representation instead of throwing
+		static ulong ToUInt64(IConvertible value)
+		{
+			switch (value.GetTypeCode())
+			{
+				case TypeCode.SByte:
+				case TypeCode.Int16:
+				case TypeCode.Int32:
+				case TypeCode.Int64:
+					return unchecked((ulong)value.ToInt64(null));
+				default:
+					return value.ToUInt64(null);
+			}
 		}
 
 		//Taken from https://stackoverflow.com/questions/31374628/fast-way-of-finding-most-and-least-significant-bit-set-in-a-64-bit-integer
