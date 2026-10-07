@@ -25,13 +25,16 @@ namespace SickDev.BitPacking
 		{
 			this.value = value.ToUInt64(null);
 			significantBits = maxBits - CountLeadingZeros(this.value);
+			//Zero still takes 1 bit to be represented
+			if (significantBits == 0)
+				significantBits = 1;
 		}
 
 		//Taken from https://stackoverflow.com/questions/31374628/fast-way-of-finding-most-and-least-significant-bit-set-in-a-64-bit-integer
 		public static int CountLeadingZeros(ulong input)
 		{
 			if (input == 0)
-				return 63;
+				return maxBits;
 
 			ulong n = 1;
 			if ((input >> 32) == 0) {n += 32; input <<= 32;}
