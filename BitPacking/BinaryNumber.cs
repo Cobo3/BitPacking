@@ -61,7 +61,7 @@ namespace SickDev.BitPacking
 			//Here we shift packs of 8 bits to the right so that we can get that particular byte value
 			for (int i = 0; i < length; i++)
 			{
-				bytes[i] = clampedValue;
+				bytes[i] = (byte)clampedValue;
 				clampedValue >>= bitsPerByte;
 			}
 

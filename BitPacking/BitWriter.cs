@@ -75,7 +75,7 @@ namespace SickDev.BitPacking
 			//For every number FULLY written, get its bytes
 			for (int i = 0; i < numbersCount - 1; i++)
 			{
-				byte[] bytes = System.BitConverter.GetBytes(numbers[i].value);
+				byte[] bytes = System.BitConverter.GetBytes((ulong)numbers[i]);
 				bytesPerNumber[i] = bytes;
 				totalBytes += (ulong)bytes.Length;
 			}
