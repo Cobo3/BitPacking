@@ -36,6 +36,13 @@ namespace SickDev.BitPacking.Tests
 		}
 
 		[Test]
+		public void Read_Throws_When_MoreThan64Bits()
+		{
+			BitReader reader = new BitReader(new byte[9]);
+			Assert.That(() => reader.Read(65), Throws.InstanceOf<ArgumentOutOfRangeException>());
+		}
+
+		[Test]
 		public void Read_Works()
 		{
 			BitReader reader = new BitReader(
