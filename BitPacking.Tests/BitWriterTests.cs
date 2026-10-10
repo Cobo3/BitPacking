@@ -61,11 +61,15 @@ namespace SickDev.BitPacking.Tests
 		[Test]
 		public void Write_WithBits_Ignores_HigherBits_When_MoreThan64Bits()
 		{
+			/* After 60 bits, only 4 of the 8 bits of 11111111 fit in the first 64 bits.
+			 * The other 4 go to the next 64 bits, followed by 4 bits of 0: 0000 1111
+			 * Without masking, the upper bits of ulong.MaxValue would overwrite those 4 bits of 0: 1111 1111
+			 */
 			BitWriter writer = new BitWriter();
-			writer.Write(0UL, 60);
+			writer.Write(0, 60);
 			writer.Write(ulong.MaxValue, 8);
 			writer.Write(0, 4);
-			Assert.AreEqual(new byte[] { 0, 0, 0, 0, 0, 0, 0, 0xF0, 0x0F }, writer.GetBytes());
+			Assert.AreEqual(new byte[] { 0, 0, 0, 0, 0, 0, 0, 0b11110000, 0b00001111 }, writer.GetBytes());
 		}
 
 		[Test]
