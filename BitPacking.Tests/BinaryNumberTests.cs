@@ -134,10 +134,12 @@ namespace SickDev.BitPacking.Tests
 		}
 
 		[Test]
-		public void ToType_Works()
+		public void ToType_Returns_SameValue_As_RequestedType()
 		{
 			BinaryNumber binary = 42;
-			Assert.AreEqual(42, binary.ToType(typeof(int)));
+			object converted = binary.ToType(typeof(int));
+			Assert.IsInstanceOf<int>(converted);
+			Assert.AreEqual(42, converted);
 		}
 
 		[Test]
