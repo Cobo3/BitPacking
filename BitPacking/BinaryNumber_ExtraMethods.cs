@@ -44,16 +44,16 @@ namespace SickDev.BitPacking
 		#region Operators
 		public static BinaryNumber operator <<(in BinaryNumber binary, int bits) => binary.value << bits;
 		public static BinaryNumber operator >>(in BinaryNumber binary, int bits) => binary.value >> bits;
-		public static BinaryNumber operator |(in BinaryNumber binary, IConvertible number) => binary.value | number.ToUInt64(null);
-		public static BinaryNumber operator &(in BinaryNumber binary, IConvertible number) => binary.value & number.ToUInt64(null);
-		public static BinaryNumber operator ^(in BinaryNumber binary, IConvertible number) => binary.value ^ number.ToUInt64(null);
+		public static BinaryNumber operator |(in BinaryNumber binary, IConvertible number) => binary.value | ToUInt64(number);
+		public static BinaryNumber operator &(in BinaryNumber binary, IConvertible number) => binary.value & ToUInt64(number);
+		public static BinaryNumber operator ^(in BinaryNumber binary, IConvertible number) => binary.value ^ ToUInt64(number);
 
-		public static bool operator ==(in BinaryNumber binary, IConvertible number) => binary.value == number.ToUInt64(null);
-		public static bool operator !=(in BinaryNumber binary, IConvertible number) => binary.value != number.ToUInt64(null);
-		public static bool operator >(in BinaryNumber binary, IConvertible number) => binary.value > number.ToUInt64(null);
-		public static bool operator <(in BinaryNumber binary, IConvertible number) => binary.value < number.ToUInt64(null);
-		public static bool operator >=(in BinaryNumber binary, IConvertible number) => binary.value >= number.ToUInt64(null);
-		public static bool operator <=(in BinaryNumber binary, IConvertible number) => binary.value <= number.ToUInt64(null);
+		public static bool operator ==(in BinaryNumber binary, IConvertible number) => binary.value == ToUInt64(number);
+		public static bool operator !=(in BinaryNumber binary, IConvertible number) => binary.value != ToUInt64(number);
+		public static bool operator >(in BinaryNumber binary, IConvertible number) => binary.value > ToUInt64(number);
+		public static bool operator <(in BinaryNumber binary, IConvertible number) => binary.value < ToUInt64(number);
+		public static bool operator >=(in BinaryNumber binary, IConvertible number) => binary.value >= ToUInt64(number);
+		public static bool operator <=(in BinaryNumber binary, IConvertible number) => binary.value <= ToUInt64(number);
 
 		public static implicit operator BinaryNumber(sbyte number) => new BinaryNumber(number);
 		public static implicit operator BinaryNumber(byte number) => new BinaryNumber(number);
