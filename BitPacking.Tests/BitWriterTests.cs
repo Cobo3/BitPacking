@@ -78,5 +78,53 @@ namespace SickDev.BitPacking.Tests
 			BitWriter writer = new BitWriter();
 			Assert.That(() => writer.Write(1, bits), Throws.InstanceOf<ArgumentOutOfRangeException>());
 		}
+
+		[Test]
+		public void WriteSigned_Writes_SignBit_Before_Magnitude()
+		{
+			/* -1 is sign 1 and magnitude 1: 1 1
+			 * 1 is sign 0 and magnitude 1: 1 0
+			 * Written one after the other: 0000 10 11
+			 */
+			BitWriter writer = new BitWriter();
+			writer.WriteSigned(-1, 2);
+			writer.WriteSigned(1, 2);
+			Assert.AreEqual(new byte[] { 0b00001011 }, writer.GetBytes());
+		}
+
+		[Test]
+		public void WriteSigned_WithoutBits_Uses_SignificantBits_Of_Magnitude_Plus_SignBit()
+		{
+			/* 5 is 101, so -5 takes 4 bits: 101 1
+			 * The 1 written next must land right after those 4 bits: 1 1011
+			 */
+			BitWriter writer = new BitWriter();
+			writer.WriteSigned(-5);
+			writer.Write(1, 1);
+			Assert.AreEqual(new byte[] { 0b00011011 }, writer.GetBytes());
+		}
+
+		[Test]
+		public void WriteSigned_Throws_When_Magnitude_DoesNotFit()
+		{
+			//4 is 100, which doesn't fit in the 2 bits left after the sign bit
+			BitWriter writer = new BitWriter();
+			Assert.That(() => writer.WriteSigned(-4, 3), Throws.InstanceOf<ArgumentOutOfRangeException>());
+		}
+
+		[Test]
+		public void WriteSigned_Throws_For_LongMinValue()
+		{
+			//The magnitude of long.MinValue needs 64 bits, leaving no room for the sign bit
+			BitWriter writer = new BitWriter();
+			Assert.That(() => writer.WriteSigned(long.MinValue), Throws.InstanceOf<ArgumentOutOfRangeException>());
+		}
+
+		[Test]
+		public void WriteSigned_Throws_With_InvalidBits([Values(0, 65)] int bits)
+		{
+			BitWriter writer = new BitWriter();
+			Assert.That(() => writer.WriteSigned(0, bits), Throws.InstanceOf<ArgumentOutOfRangeException>());
+		}
 	}
 }

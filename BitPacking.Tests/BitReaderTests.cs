@@ -52,5 +52,26 @@ namespace SickDev.BitPacking.Tests
 			);
 			Assert.AreEqual(513, (ulong)reader.Read(10));
 		}
+
+		[TestCase(0L, 1)]
+		[TestCase(1L, 2)]
+		[TestCase(-1L, 2)]
+		[TestCase(-1023L, 11)]
+		[TestCase(long.MaxValue, 64)]
+		[TestCase(-long.MaxValue, 64)]
+		public void ReadSigned_Returns_ValueWrittenWithWriteSigned(long value, int bits)
+		{
+			BitWriter writer = new BitWriter();
+			writer.WriteSigned(value, bits);
+			BitReader reader = new BitReader(writer.GetBytes());
+			Assert.AreEqual(value, reader.ReadSigned(bits));
+		}
+
+		[Test]
+		public void ReadSigned_Throws_With_ZeroBits()
+		{
+			BitReader reader = new BitReader(1, 2, 3);
+			Assert.That(() => reader.ReadSigned(0), Throws.InstanceOf<ArgumentOutOfRangeException>());
+		}
 	}
 }

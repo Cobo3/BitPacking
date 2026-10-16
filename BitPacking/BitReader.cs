@@ -65,5 +65,16 @@ namespace SickDev.BitPacking
 
 			return value;
 		}
+
+		//Read a signed value written with BitWriter.WriteSigned: 1 sign bit (1 for negative) followed by its magnitude
+		public long ReadSigned(int bits)
+		{
+			if (bits < 1 || bits > BinaryNumber.maxBits)
+				throw new ArgumentOutOfRangeException(nameof(bits), $"Must be 1 <= {nameof(bits)} <= {BinaryNumber.maxBits}");
+
+			ulong value = Read(bits);
+			long magnitude = (long)(value >> 1);
+			return (value & 1) == 1 ? -magnitude : magnitude;
+		}
 	}
 }
