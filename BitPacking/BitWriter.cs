@@ -136,5 +136,26 @@ namespace SickDev.BitPacking
 		public void Write(int value, int bits) => WriteValue((ulong)value, bits);
 		public void Write(ulong value, int bits) => WriteValue(value, bits);
 		public void Write(long value, int bits) => WriteValue((ulong)value, bits);
+
+		//Write a signed value as 1 sign bit (1 for negative) followed by its magnitude, using as few bits as possible
+		public void WriteSigned(long value) => WriteSigned(value, Math.Min(new BinaryNumber(GetMagnitude(value)).significantBits + 1, BinaryNumber.maxBits));
+
+		//Write a signed value as 1 sign bit (1 for negative) followed by its magnitude in the remaining "bits - 1" bits
+		public void WriteSigned(long value, int bits)
+		{
+			if (bits < 1 || bits > BinaryNumber.maxBits)
+				throw new ArgumentOutOfRangeException(nameof(bits), $"Must be 1 <= {nameof(bits)} <= {BinaryNumber.maxBits}");
+
+			ulong magnitude = GetMagnitude(value);
+			int magnitudeBits = bits - 1;
+			if ((magnitude >> magnitudeBits) != 0)
+				throw new ArgumentOutOfRangeException(nameof(value), $"The magnitude of {value} doesn't fit in {magnitudeBits} bits");
+
+			ulong sign = value < 0 ? 1UL : 0UL;
+			WriteValue(magnitude << 1 | sign, bits);
+		}
+
+		//unchecked so that long.MinValue, whose magnitude doesn't fit in a long, still gets its magnitude as a ulong
+		static ulong GetMagnitude(long value) => value < 0 ? unchecked((ulong)-value) : (ulong)value;
 	}
 }
