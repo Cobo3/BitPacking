@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System;
+using System.Text;
 using System.Collections.Generic;
 using DebugBinaryNumber =
 #if DEBUG
@@ -36,6 +37,12 @@ namespace SickDev.BitPacking
 		//Write only the specified number of bits of the specified value
 		void WriteValue(DebugBinaryNumber value, int bits)
 		{
+			if (bits < 0 || bits > BinaryNumber.maxBits)
+				throw new ArgumentOutOfRangeException(nameof(bits), $"Must be 0 <= {nameof(bits)} <= {BinaryNumber.maxBits}");
+
+			//Discard any bits above the ones we were asked to write so they don't overwrite the next values
+			value &= MaskUtility.MakeFilled(bits);
+
 			//If we don't have enough space to write the whole value...
 			if (bits > freeBits)
 			{
