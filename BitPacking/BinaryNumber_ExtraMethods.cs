@@ -76,7 +76,7 @@ namespace SickDev.BitPacking
 
 		public int CompareTo(BinaryNumber other) => value.CompareTo(other.value);
 		public bool Equals(BinaryNumber other) => value.Equals(other.value);
-		public override bool Equals(object obj) => value.Equals(obj);
+		public override bool Equals(object obj) => obj is BinaryNumber other && Equals(other);
 		public override int GetHashCode() => value.GetHashCode();
 	}
 }

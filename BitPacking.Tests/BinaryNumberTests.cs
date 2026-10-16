@@ -182,6 +182,22 @@ namespace SickDev.BitPacking.Tests
 		}
 
 		[Test]
+		public void Equals_Is_True_For_BoxedBinaryNumber_With_SameValue()
+		{
+			BinaryNumber binary = 42;
+			object binary2 = new BinaryNumber(42);
+			Assert.IsTrue(binary.Equals(binary2));
+		}
+
+		[Test]
+		public void Equals_Is_False_For_BoxedBinaryNumber_With_DifferentValue()
+		{
+			BinaryNumber binary = 42;
+			object binary2 = new BinaryNumber(43);
+			Assert.IsFalse(binary.Equals(binary2));
+		}
+
+		[Test]
 		public void NotEqualOperator_Works()
 		{
 			BinaryNumber binary = new BinaryNumber(40);
